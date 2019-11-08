@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title>{% if request.user.is_authenticated %}{{user}}{% else %}About{% endif %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    {% load static %}
+    <link rel = "icon" href ="{% static 'books/manybook.png' %}" type = "image/x-icon">
+    <style media="screen">
+    .navbar{
+      background-color:  #007cc4;
+    }
+    .navbar-brand{
+      color: #fff;
+      font-size: 3em;
+      font-family: 'Amatic SC', cursive;
+      letter-spacing: 3px;
+      text-align: left;
+    }
+    .navbar-brand:hover{
+      color: #fff;
+    }
+
+    /* new shadow css  */
+    .shadow{
+        border: 1px solid #ddd;
+        box-shadow: 0 0 5px 5px #555;
+        border-radius: 2px;
+    }
+    .profilehr{
+        border: none;
+        height:1px;
+        background-color: #bbb;
+    }
+    .profiledetail{
+        font-size: .85em;
+    }
+    .recentuploads{
+        color:#555;
+        font-size: 1.4em;
+    }
+    ul{
+        list-style: none;
+    }
+    li{
+        padding: 10px 10px;
+        border-top: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        color: #555;
+    }
+    li:last-child{
+        border-bottom: 1px solid #ccc;
+    }
+    li:hover{
+        border:1px solid #007cc4;
+        text-decoration: none;
+        color: #007cc4;
+    }
+    li a{
+        color: inherit;
+    }
+    li a:hover{
+      text-decoration: none;
+    }
+    .bottomnav{
+        position: fixed;
+        bottom: 0;
+        width:100%;
+        height:50px;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+    }
+    .bottomnavtext{
+        font-size: .7em;
+    }
+    .navactive{
+        color : #007cc4;
+    }
+    .sometext{
+        font-size: 1.1em;
+        color: #555;
+    }
+    .bottomtext{
+        font-size: 1.2em;
+        color: #555;
+    }
+    .divshadow{
+        border: 1px solid #eee;
+        box-shadow: 0 0 5px 2px #eee;
+    }
+    .divshadow:hover{
+        box-shadow: 0 0 5px 2px #bbb;
+    }
+    </style>
+    <script type="text/javascript">
+    function product(txt){
+      location.href='{% url 'books:bookview' %}?isbn='+txt;
+    }
+    </script>
+  </head>
+  <body>
+      
+
+      {% if auth %}
+
+      <div class="container">
+          <div class="row mt-5 mb-3">
+              <div class="col-sm-12 col-md-4 shadow px-3 py-4 m-3">
+                  <div class="col-sm-12">
+                      <p class="text-center">My Profile</p>
+                  </div>
+                  <div class="col-sm-12">
+                       {% load static %}
+                       <img src="{% if userpic %} {{ userpic }} {% else %} {% static 'books/nouser.jpeg' %} {% endif %}" class="rounded-circle mx-auto d-block" height="128px" width="128px">
+                  </div>
+                  <hr class="profilehr">
+                  <div class="col-sm-12">
+                      <div class="row">
+                          <div class="col-sm-2"></div>
+                          <div class="col-sm-1">
+                              <i class="material-icons">person</i>
+                          </div>
+                          <div class="col-sm-8">
+                              <p class="profiledetail">{{user}}</p>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-2"></div>
+                          <div class="col-sm-1">
+                              <i class="material-icons">local_post_office</i>
+                          </div>
+                          <div class="col-sm-8">
+                              <p class="profiledetail">{{email}}</p>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-2"></div>
+                          <div class="col-sm-1">
+                              <i class="material-icons">today</i>
+                          </div>
+                          <div class="col-sm-8">
+                              <p class="profiledetail" >{{dob}}</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-sm-12 col-md-7 shadow px-5 py-4 m-3">
+                  <div class="row">
+                      <p class="recentuploads">My Recent Uploads</p>
+                  </div>
+                  <div class="row">
+                      {% if recent %}
+                      <ul style="width:100%;">
+                          {% for book in recent %}
+                          <li style="cursor: pointer" onclick="product({{book.isbn}})">
+                              <div class="col-sm-12">
+                                {{book.title}} <em style="color:#888;font-size:.9em;"> by {{book.author}}</em>
+                              </div>
+                          </li>
+                          {% endfor %}
+                      </ul>
+                      {% else %}
+                        <div class="col-sm-12 mt-5 text-center">
+                          <p class="sometext">No books uploaded by you</p>
+                        </div>
+                      {% endif %}
+                  </div>
+              </div>
+          </div>
+
+          <div class="row mt-3 mb-5">
+              <div class="col-sm-12 col-md-6 shadow px-5 py-4 m-3">
+                  <div class="col-sm-12 mb-4">
+                      <p class="recentuploads">Additional Links</p>
+                  </div>
+                  <div class="row my-3">
+                      <div class="col-sm-1"></div>
+                      <div class="col-sm-10">
+                          <ul>
+                              <li style="cursor: pointer" onclick="location.href='{% url 'books:addbook' %}'" class="lihover"> <a>Add New Book</a> </li>
+                              <li style="cursor: pointer" onclick="location.href='{% url 'account:update' %}'" class="lihover"> <a>Update Profile</a> </li>
+                              <li style="cursor: pointer" onclick="location.href='{% url 'password_change' %}'" class="lihover"> <a>Change Password</a> </li>
+                              <li style="cursor: pointer" onclick="location.href='{% url 'books:about_us' %}'" class="lihover"> <a>About us</a> </li>
+                              <li style="cursor: pointer" onclick="location.href='{% url 'account:logout' %}'" class="lihover"> <a style="color:red">Logout</a></li>
+                          </ul>
+                      </div>
+                      <div class="col-sm-1"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+              {% else %}
+
+                <div class="container">
+                    <div class="row mt-5 mx-2">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 col-sm-12 p-3">
+                            <div class="row">
+                                <div style="cursor: pointer" class="col-sm-12 col-md-6 p-3 divshadow" onclick="location.href='{% url 'account:register' %}?next={% url 'books:me' %}'">
+                                    <p class="sometext text-center">SignUp</p>
+                                </div>
+                                <div style="cursor: pointer" class="col-sm-12 col-md-6 p-3 divshadow" onclick="location.href='{% url 'account:login' %}?next={% url 'books:me' %}'">
+                                    <p class="sometext text-center">SignIn</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div style="cursor: pointer" class="col-sm-12 p-3 divshadow">
+                                    <p class="bottomtext text-center">AboutUs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                </div>
+
+              {% endif %}
+
+              <div class="bottomnav container-fluid">
+                  <div class="row">
+                      <div class="col-md-4"></div>
+                      <div class="col-sm-12 col-md-4 mx-2">
+                          <div class="row">
+                              <div style="cursor: pointer" class="col-sm-4"  onclick="location.href='{% url 'books:bookshelf' %}'">
+                                  <div class="col-sm-12 text-center">
+                                      <i class="material-icons">class</i>
+                                  </div>
+                                  <div class="col-sm-12 bottomnavtext text-center">
+                                      Bookshelf
+                                  </div>
+                              </div>
+                              <div style="cursor: pointer" class="col-sm-4" onclick="location.href='{% url 'books:home' %}'">
+                                  <div class="col-sm-12 text-center">
+                                      <i class="material-icons">store_mall_directory</i>
+                                  </div>
+                                  <div class="col-sm-12 bottomnavtext text-center">
+                                      Library
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="col-sm-12 text-center">
+                                      <i class="material-icons navactive">account_circle</i>
+                                  </div>
+                                  <div class="col-sm-12 text-center navactive bottomnavtext">
+                                      Me
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4"></div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+	{% extends 'books/base.html' %}
+	{% load static %}
+	{% load widget_tweaks %}
+
+	{% block css %}
+	*{
+		font-family: 'Roboto', sans-serif;
+	}
+	{% endblock %}
+
+	{% block js %}
+		function sendform(){
+			document.getElementById('button').disabled = true;
+			document.getElementById('form').submit();
+		}
+	{% endblock %}
+
+	{% block exlinks %}
+	<link rel="stylesheet" type="text/css" href="{% static 'loginfonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/bootstrap/css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginfonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animate/animate.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/css-hamburgers/hamburgers.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animsition/css/animsition.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/select2/select2.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/daterangepicker/daterangepicker.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'logincss/util.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'logincss/main.css' %}">
+
+		<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+
+
+		<script src="{% static 'loginvendor/jquery/jquery-3.2.1.min.js' %}"></script>
+			<script src="{% static 'loginvendor/animsition/js/animsition.min.js' %}"></script>
+			<script src="{% static 'loginvendor/bootstrap/js/popper.js' %}"></script>
+			<script src="{% static 'loginvendor/bootstrap/js/bootstrap.min.js' %}"></script>
+			<script src="{% static 'loginvendor/select2/select2.min.js' %}"></script>
+			<script src="{% static 'loginvendor/daterangepicker/moment.min.js' %}"></script>
+			<script src="{% static 'loginvendor/daterangepicker/daterangepicker.js' %}"></script>
+			<script src="{% static 'loginvendor/countdowntime/countdowntime.js' %}"></script>
+			<script src="{% static 'loginjs/main.js' %}"></script>
+			<link rel="stylesheet" type="text/css" href="{% static 'mystyle.css' %}">
+	{% endblock %}
+
+
+	{% block content %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="col-sm-12" style='height:60px;'>
+
+			</div>
+			<div class="wrap-login100">
+				<div class="login100-form-title" style="background-image: url({% static 'loginimages/bg-01.jpg' %});">
+					<span class="login100-form-title-1">
+						Sign In
+					</span>
+				</div>
+
+				<form id="form" class="login100-form validate-form" action="" method="post">
+
+	                    {% csrf_token %}
+						{% if next %}
+	                      <input type="hidden" name="next" value="{{ next }}">
+	                    {% endif %}
+					<div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
+						<span class="label-input100">Email</span>
+						{% render_field form.username class="input100" placeholder='Email' %}
+						{% if formlogin.email.errors %}
+						  {% for err in formlogin.email.errors %}
+							<span class="focus-input100 pt-5" style="color:red;">{{err}}</span>
+						  {% endfor %}
+						{% endif %}
+
+					</div>
+
+					{{form.next}}
+
+					<div class="wrap-input100 validate-input m-b-18" data-validate = "Password is required">
+						<span class="label-input100">Password</span>
+						{% render_field form.password class="input100" placeholder='Password' %}
+						{% if formlogin.password.errors %}
+						  {% for err in form.password.errors %}
+							<span class="focus-input100 pt-5" style="color:red;">{{err}}</span>
+						  {% endfor %}
+						{% endif %}
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="flex-sb-m w-full p-b-30 pt-3">
+						<div>
+							<a href="{% url 'account:register' %}" class="txt1">
+								Sign Up?
+							</a>
+						</div>
+
+						<div>
+							<a href="{% url 'password_reset' %}" class="txt1">
+								Forgot Password?
+							</a>
+						</div>
+					</div>
+
+					<div id="button" class="container-login100-form-btn">
+						<button class="login100-form-btn" onclick="sendform()">
+							Login
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	 </div>
+
+	{% endblock %}

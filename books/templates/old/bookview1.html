@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{{book.title}}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    {% load static %}
+    <link rel = "icon" href ="{% static 'books/manybook.png' %}" type = "image/x-icon">
+    <style media="screen">
+      .card-img-top {
+          width: 100%;
+          height: 15vw;
+          object-fit: cover;
+      }
+      .brand{
+        font-size: 1.5em;
+      }
+      .navbar{
+        border-bottom: 1px solid #ddd;
+      }
+      .decheading{
+          font-size: 1.5em;
+          color: #555;
+      }
+      .normheading{
+          font-size: 1.2em;
+          color : #555;
+      }
+      .btncolor{
+        background-color:  #fff;
+        color:#007cc4;
+        border: 1px solid #007cc4;
+        padding: 5px 8px;
+      }
+      .btncolor:hover{
+        box-shadow: 0 0 5px 1px #555;
+        background-color: #007cc4;
+        color:#eee;
+      }
+      #popupok{
+          display:none;
+          position: fixed;
+          right: 50px;
+          top:100px;
+          border-radius: 2px;
+          border: 1px solid #aaa;
+          box-shadow: 0 0 5px 2px #aaa;
+          height:85px;
+          width: 240px;
+          padding: 30px;
+          background-color: #fff;
+          color:black;
+      }
+      #popuppre{
+          display:none;
+          position: fixed;
+          right: 50px;
+          top:100px;
+          border-radius: 2px;
+          border: 1px solid #aaa;
+          box-shadow: 0 0 6px 2px #aaa;
+          height:85px;
+          width: 300px;
+          padding: 30px;
+          background-color: #fff;
+          color:black;
+      }
+      #popuperr{
+          display:none;
+          position: fixed;
+          right: 50px;
+          top:100px;
+          border-radius: 2px;
+          border: 1px solid #aaa;
+          box-shadow: 0 0 5px 2px #aaa;
+          height:85px;
+          width: 300px;
+          padding: 30px;
+          background-color: #fff;
+          color:black;
+      }
+      .icon{
+        font-size:1.6em;
+      }
+      .showpopup{
+          display: block;
+          z-index: 150;
+      }
+      .brand{
+        font-size: 2.2em;
+        color:#555;
+      }
+      .brand:hover{
+        color:#555;
+      }
+      .backarrow{
+        color:#555;
+        font-size: 1.1em;
+      }
+
+    </style>
+    <script type="text/javascript">
+        var url = '{% url "books:addtoshelf" %}?isbn={{book.isbn}}';
+        var response;
+        var request = new XMLHttpRequest()
+        var popupInterval;
+        var id;
+        function clearpopup(){
+          clearInterval(popupInterval);
+          $(id).fadeOut();
+        }
+
+        request.onload = function(){
+            response = JSON.parse(request.response);
+            if( response['status'] == 'ok'){
+                id = '#popupok'
+            }
+            if( response['status'] == 'err'){
+                id = '#popuperr'
+            }
+            if( response['status'] == 'pre'){
+                id = '#popuppre'
+            }
+            popupInterval = setInterval(clearpopup,3000);
+            $(id).fadeIn();
+        }
+        function addtoshelf(){
+            request.open('GET',url,true);
+            request.send()
+        }
+
+
+
+    </script>
+  </head>
+  <body>
+
+      <div id="popupok">
+          <div class="row">
+            <div class="col-sm-2">
+              <i class="material-icons icon">library_add</i>
+            </div>
+            <div class="col-sm-10 text-center">
+              Book Added
+            </div>
+          </div>
+      </div>
+      <div id="popuperr">
+          <div class="row">
+            <div class="col-sm-2">
+              <i class="material-icons icon">block</i>
+            </div>
+            <div class="col-sm-10 text-center">
+              Some Error Occured
+            </div>
+          </div>
+      </div>
+      <div id="popuppre">
+          <div class="row">
+            <div class="col-sm-2">
+              <i class="material-icons icon">report</i>
+            </div>
+            <div class="col-sm-10 text-center">
+              Book Already Added
+            </div>
+          </div>
+      </div>
+
+    <!-- <div class="navbar">
+        <div class="container">
+          <div class="row p-3">
+            <div class="col-sm-1">
+              <a href="{% url 'books:home' %}" class="navbar-brand brand"><i class="material-icons">arrow_back</i></a>
+            </div>
+            <div class="col-sm-9">
+              <a href="#" class="navbar-brand brand">{{book.title}}</a>
+            </div>
+          </div>
+        </div>
+    </div> -->
+
+    <div class="navbar">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-2">
+            <a href="{% url 'books:home' %}" class="navbar-brand brand" style="margin-top:5px;"><i class="backarrow material-icons">arrow_back</i></a>
+          </div>
+          <div class="col-sm-1"></div>
+          <div class="col-sm-6">
+            <a href="#" class="navbar-brand brand">{{book.title}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-sm-12 col-md-5">
+          {% if book.cover %}
+          <img src="{{ book.cover.url }}" alt="" style="max-width:240px;max-height:320px;">
+          {% else %}
+          <img src="{% static 'books/nocover.jpeg' %}" alt="">
+          {% endif %}
+        </div>
+        <div class="m-5 col-sm-12 col-md-5">
+          <p><span class="normheading">Title :</span> {{book.title}}</p>
+          <p><span class="normheading">Author :</span> {{book.author}}</p>
+          <p><span class="normheading">ISBN :</span> {{book.isbn}}</p>
+          <p><span class="normheading">Genres :</span> {{book.genre}}</p>
+          <p><span class="normheading">Views :</span> {{book.views}}</p>
+          {% if request.user.is_authenticated %}
+          <button type="button" name="button" class="btncolor" onclick="addtoshelf()">Add to Bookshelf</button>
+          {% else %}
+          <p>Sign in to add books to bookself</p>
+          {% endif %}
+        </div>
+      </div>
+      <hr style="color:#333;">
+      <div class="row my-5 ml-4">
+        <div class="row">
+            <p class='decheading'>Description</p>
+        </div>
+        <div class="row mt-5 ml-3">
+            <p>{{book.description}}</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+{% extends 'books/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block js %}
+    function sendform(){
+        document.getElementById('button').disabled = true;
+        document.getElementById('form').submit();
+    }
+
+
+
+{% endblock %}
+
+{% block exlinks %}
+<link rel="stylesheet" type="text/css" href="{% static 'loginfonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginvendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginfonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animate/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginvendor/css-hamburgers/hamburgers.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animsition/css/animsition.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginvendor/select2/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'loginvendor/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logincss/util.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logincss/main.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+
+
+    <!-- <script src="{% static 'loginvendor/jquery/jquery-3.2.1.min.js' %}"></script> -->
+        <script src="{% static 'loginvendor/animsition/js/animsition.min.js' %}"></script>
+        <script src="{% static 'loginvendor/bootstrap/js/popper.js' %}"></script>
+        <script src="{% static 'loginvendor/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'loginvendor/select2/select2.min.js' %}"></script>
+        <script src="{% static 'loginvendor/daterangepicker/moment.min.js' %}"></script>
+        <script src="{% static 'loginvendor/daterangepicker/daterangepicker.js' %}"></script>
+        <script src="{% static 'loginjs/main.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'mystyle.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="limiter">
+    <div class="col-sm-12" style="height:80px;">
+
+    </div>
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-form-title" style="background-image: url({% static 'loginimages/bg-01.jpg' %});">
+                <span class="login100-form-title-1">
+                    Sign Up
+                </span>
+            </div>
+
+            <form id="form" class="login100-form validate-form" action="{% url 'account:register' %}" method="post" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+                    {% if next %}
+                      <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
+
+
+
+                <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
+                    <span class="label-input100">Email</span>
+                    {% render_field formreg.email class="input100" placeholder='Email' %}
+                    {% if formreg.email.errors %}
+                      {% for err in formreg.email.errors %}
+                        <span class="focus-input100 pt-5">{{err}}</span>
+                      {% endfor %}
+                    {% endif %}
+
+                </div>
+
+                <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
+                    <span class="label-input100">UserName</span>
+                    {% render_field formreg.username class="input100" placeholder='username' %}
+                    {% if formreg.username.errors %}
+                      {% for err in formreg.username.errors %}
+                        <span class="focus-input100 pt-5">{{err}}</span>
+                      {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="wrap-input100 validate-input m-b-18" data-validate = "Password is required">
+                    <span class="label-input100">Password</span>
+                    {% render_field formreg.password1 class="input100" placeholder='Password' %}
+                    {% if formreg.password1.errors %}
+                      {% for err in formreg.password1.errors %}
+                        <span class="focus-input100 pt-5">{{err}}</span>
+                      {% endfor %}
+                    {% endif %}
+                    <span class="focus-input100"></span>
+                </div>
+
+                <div class="wrap-input100 validate-input m-b-18" data-validate = "Password is required">
+                    <span class="label-input100">Confirm Password</span>
+                    {% render_field formreg.password2 class="input100" placeholder='Password' %}
+                    {% if formreg.password2.errors %}
+                      {% for err in formreg.password2.errors %}
+                        <span class="focus-input100 pt-5">{{err}}</span>
+                      {% endfor %}
+                    {% endif %}
+                    <span class="focus-input100"></span>
+                </div>
+
+                <div class="wrap-input100 validate-input m-b-18" data-validate = "DOB is required">
+                    <span class="label-input100">DOB</span>
+                    {% render_field formreg.dob class="input100" placeholder='DOB' %}
+
+                    {% if formreg.dob.errors %}
+                      {% for err in formreg.dob.errors %}
+                        <span class="focus-input100 pt-5">{{err}}</span>
+                      {% endfor %}
+                    {% endif %}
+                    <span class="focus-input100"></span>
+                </div>
+
+
+                <div class=" m-b-18">
+
+                    <span class="label-input100">Profile picture</span>
+                    {% render_field formreg.userpic accept=".png,.jpg,.jpeg" %}
+                    <p class="focus-input100 pt-4">Only jpg, jpeg and png support</p>
+                    {% if formreg.userpic.errors %}
+                      {% for err in formreg.userpic.errors %}
+                        <span class="focus-input100 pt-5">{{err}}</span>
+                      {% endfor %}
+                    {% endif %}
+                    <span class="focus-input100"></span>
+                </div>
+
+
+                <input type="hidden" name="filefield" value="" id="filefield">
+                <div class="flex-sb-m w-full p-b-30 mt-4">
+                    <div>
+                        <a href="{% url 'account:login' %}" class="txt1">
+                            Sign In?
+                        </a>
+                    </div>
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <button id="button" class="login100-form-btn">
+                        Sign Up
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+ </div>
+
+{% endblock %}

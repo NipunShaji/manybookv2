@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Add Book</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Amatic+SC:700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        {% load static %}
+        <link rel = "icon" href ="{% static 'books/manybook.png' %}" type = "image/x-icon">
+        <style media="screen">
+            .navbar{
+              background-color:  #007cc4;
+            }
+            .navbar-brand{
+              color: #fff;
+              font-size: 3em;
+              font-family: 'Amatic SC', cursive;
+              letter-spacing: 3px;
+              text-align: left;
+            }
+            .navbar-brand:hover{
+              color: #fff;
+            }
+            .submitbtn{
+                border: 1px solid #007cc4;
+                border-radius: 1px;
+                padding: 5px 10px;
+                color : #007cc4;
+            }
+            .submitbtn:hover{
+                background-color: #007cc4;
+                color: #fff;
+                box-shadow: 0 0 5px 2px #555;
+            }
+            .formcontrol{
+                border: none;
+                border-bottom: 1px solid grey;
+                width:100%;
+            }
+
+            .focused{
+              border-bottom: 2px solid #007cc4;
+            }
+            .inputerror{
+                border: none;
+                border-bottom: 1px solid grey;
+            }
+            .alter{
+              font-size: small;
+            }
+            .err{
+              color:red;
+            }
+            .bookadded{
+              position:fixed;
+              top: 150px;
+              right:50px;
+              width:500px;
+              height:200px;
+              border: 1px solid grey;
+              box-shadow: 0 0 5px 2px #555;
+              padding:30px 20px;
+              background-color: #fff;
+              display:none;
+            }
+            .newbookadded{
+              font-size: 1.5em;
+            }
+            .bookaddedhr{
+              border:none;
+              background-color: #007cc4;
+              height:2px;
+
+            }
+            .booktitle{
+              font-size: 1.3em;
+              margin-bottom: 10px;
+              margin-left: 15px;
+            }
+            .bookauthor{
+              color: #555;
+              margin-left: 15px;
+            }
+            .bookauthorname{
+              color: # 222;
+            }
+            .addbookheading{
+                font-size: 1.6em;
+            }
+            .backarrow{
+              font-size:.9em;
+            }
+        </style>
+        <script type="text/javascript">
+        console.log('runnde');
+        var currentlyBlurred;
+        $(document).ready(function(){
+            $(".itemToBeFocused").focus(function () {
+                    var inputfields = $('.itemToBeFocused');
+                    for(i=0;i<inputfields.len;i++){
+                      inputfields[i].removeClass('focused');
+                    }
+                    currentlyBlurred = $(':focus');
+                    $(currentlyBlurred).addClass('focused');
+                })
+            $(".itemToBeFocused").blur(function () {
+                    $(currentlyBlurred).removeClass('focused');
+                })
+        var popupInterval;
+        function clearpopup(){
+          clearInterval(popupInterval);
+          $('.bookadded').fadeOut();
+        }
+        {% if result %}
+        popupInterval = setInterval(clearpopup,3000);
+        $('.bookadded').fadeIn(1000);
+        {% endif %}
+        });
+        </script>
+    </head>
+    <body>
+        <div class="navbar">
+          <div class="col-md-2"></div>
+          <div class="col-sm-12 col-md-8">
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-11">
+                <a href="{% url 'books:me' %}" class="navbar-brand py-3"><i class="backarrow material-icons">arrow_back</i> ManyBooks</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2"></div>
+        </div>
+        <!-- end of navbar -->
+        <div class="row">
+            <div class="col-sm-12 mt-5 mb-3">
+                <p class="addbookheading text-center">Add New Book</p>
+            </div>
+        </div>
+        <div class="row my-5 mx-4">
+            <div class="col-md-4 col-sm-1"></div>
+            <div class="col-md-4 col-sm-10">
+                <form class="" action="{% url 'books:addbook'%}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                            <div class="form-group row mb-5">
+                                <label for="id_title" class="col-sm-3 col-form-label">Title</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        {{ form.title }}
+                                    </div>
+                                    <div class="row">
+                                        {% if form.title.errors %}
+                                          {% for err in form.title.errors %}
+                                            <p class='alter err'>{{ err }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row mb-5">
+                                <label for="id_title" class="col-sm-3 col-form-label">Author</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        {{ form.author }}
+                                    </div>
+                                    <div class="row">
+                                        {% if form.author.errors %}
+                                          {% for err in form.author.errors %}
+                                            <p class='alter err'>{{ err }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row mb-5">
+                                <label for="id_title" class="col-sm-3 col-form-label">Series</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        {{ form.series }}
+                                    </div>
+                                    <div class="row">
+                                        {% if form.series.errors %}
+                                          {% for err in form.series.errors %}
+                                            <p class='alter err'>{{ err }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-5">
+                                <label for="id_title" class="col-sm-3 col-form-label">Language</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        {{ form.language }}
+                                    </div>
+                                    <div class="row">
+                                        {% if form.language.errors %}
+                                          {% for err in form.language.errors %}
+                                            <p class='alter err'>{{ err }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row mb-5">
+                                <label for="id_title" class="col-sm-3 col-form-label">ISBN</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        {{ form.isbn }}
+                                    </div>
+                                    <div class="row">
+                                        {% if form.isbn.errors %}
+                                          {% for err in form.isbn.errors %}
+                                            <p class='alter err'>{{ err }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-5">
+                                <label for="id_title" class="col-sm-3 col-form-label">Description</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        {{ form.description }}
+                                    </div>
+                                    <div class="row">
+                                        {% if form.description.errors %}
+                                          {% for err in form.description.errors %}
+                                            <p class='alter err'>{{ err }}</p>
+                                          {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                    <div class="row mb-5 ml-3">
+                        <div class="row">
+                            <p class="genre">Genres : </p>
+                        </div>
+                        <div class="row">
+                            {% for value,text in form.genre.field.choices %}
+                                <div class="col-sm-6 mb-3">
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="checkbox" value="{{ value }}" name="{{ form.genre.name }}" id="id_genre_{{ forloop.counter0 }}">
+                                      <label class="form-check-label" for="id_genre_{{ forloop.counter0 }}">
+                                        {{text}}
+                                      </label>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                            <div class="row">
+                                {% if form.genre.errors %}
+                                  {% for err in form.genre.errors %}
+                                    <p class='alter err'>{{ err }}</p>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="row mb-3 ml-2">
+                            <div class="form-group">
+                                <label for="exampleFormControlFile1">Select Ebook (pdf) :</label>
+                                {{ form.file }}
+                            </div>
+                            <div class="row">
+                                {% if form.file.errors %}
+                                  {% for err in form.file.errors %}
+                                    <p class='alter err'>{{ err }}</p>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row mb-3 ml-2">
+                            <div class="form-group">
+                                <label for="exampleFormControlFile1">Cover picture :</label>
+                                {{ form.cover }}
+                            </div>
+                            <div class="row">
+                                {% if form.cover.errors %}
+                                  {% for err in form.cover.errors %}
+                                    <p class='alter err'>{{ err }}</p>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                    <div class="row mb-5 mt-4">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-6">
+                            <input type="submit" name="addbook" value="Add Book" class="btn form-control submitbtn">
+                        </div>
+                        <div class="col-sm-3"></div>
+                    </div>
+
+                </form>
+            </div>
+            <!-- end of main div inside container -->
+            <div class="col-md-4 col-sm-1"></div>
+        </div>
+        <!-- end of container -->
+        <div class="bookadded">
+          <p class="newbookadded">New Book Added</p>
+          <hr class="bookaddedhr">
+          <p class="booktitle">{% if booktitle %}{{booktitle}}{% endif %}</p>
+          <p class="bookauthor">by <em>{% if bookauthor %}{{bookauthor}}{% endif %}</em></p>
+        </div>
+    </body>
+</html>

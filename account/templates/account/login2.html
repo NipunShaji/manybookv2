@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Login</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Amatic+SC:700&display=swap" rel="stylesheet">
+        {% load static %}
+        <link rel = "icon" href ="{% static 'books/manybook.png' %}" type = "image/x-icon">
+        <style media="screen">
+          .navbar{
+            background-color:  #007cc4;
+          }
+          .navbar-brand{
+            color: #fff;
+            font-size: 3em;
+            font-family: 'Amatic SC', cursive;
+            letter-spacing: 3px;
+            text-align: left;
+          }
+          .navbar-brand:hover{
+            color: #fff;
+          }
+          .log{
+            margin-top: 50px;
+            box-shadow: 0 0 10px 3px #aaa;
+            border: 1px solid #eee;
+          }
+          .forminput{
+            margin-top: 30px;
+            margin-bottom: 30px;
+          }
+          .btncolor{
+            background-color:  #fff;
+            color:#007cc4;
+            border: 1px solid #007cc4;
+          }
+          .btncolor:hover{
+            box-shadow: 0 0 5px 1px #555;
+            background-color: #007cc4;
+            color:#fff;
+          }
+          .alter{
+            font-size: small;
+          }
+          .err{
+            color:red;
+          }
+          {% if login %}
+          .registration{
+            display: none;
+          }
+          {% else %}
+          .login{
+            display: none;
+          }
+          {% endif %}
+          .showdiv{
+            display:flex;
+          }
+          .hidediv{
+            display:none;
+          }
+          .reg{
+            margin-top: 50px;
+            box-shadow: 0 0 10px 3px #aaa;
+            border: 1px solid #eee;
+          }
+          .altlink{
+              color: #00f;
+          }
+          .reset{
+              font-size: .8em;
+          }
+          .reset:hover{
+              text-decoration: none;
+          }
+
+          .formcontrol{
+              border: none;
+              border-bottom: 1px solid grey;
+              width:100%;
+          }
+          .focused{
+            border-bottom: 2px solid #007cc4;
+          }
+        </style>
+
+        <script type="text/javascript">
+        var currentlyBlurred;
+        $(document).ready(function(){
+            $(".itemToBeFocused").focus(function () {
+                    var inputfields = $('.itemToBeFocused');
+                    for(i=0;i<inputfields.len;i++){
+                      inputfields[i].removeClass('focused');
+                    }
+                    currentlyBlurred = $(':focus');
+                    $(currentlyBlurred).addClass('focused');
+                })
+            $(".itemToBeFocused").blur(function () {
+                    $(currentlyBlurred).removeClass('focused');
+                })
+        var popupInterval;
+        function clearpopup(){
+          clearInterval(popupInterval);
+          $('.bookadded').fadeOut();
+        }
+        {% if result %}
+        popupInterval = setInterval(clearpopup,3000);
+        $('.bookadded').fadeIn(1000);
+        {% endif %}
+        });
+        </script>
+
+    </head>
+    <body>
+      <div class="navbar">
+        <div class="col-md-2"></div>
+        <div class="col-sm-12 col-md-8">
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+              <a href="{% url 'books:home' %}" class="navbar-brand py-3">ManyBooks</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+      <!-- navbar end  -->
+      <div class="row login my-4 mx-2" id="login">
+        <div class="col-md-4 col-sm-2"></div>
+        <div class="col-md-4 col-sm-8 log py-5">
+          <div class="row">
+            <div class="col-sm-12 mt-3">
+              <h1 class="text-center">Sign In</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-1 col-md-2"></div>
+            <div class="col-sm-10 col-md-8">
+              {% if formlogin %}
+              <form class="" action="{% url 'account:login' %}" method="post">
+                  {% csrf_token %}
+                  {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                  {% endif %}
+                  {% load widget_tweaks %}
+
+                  <div class="form-group row mt-4 mb-4">
+
+                      <div class="col-sm-12">
+                          <div class="row">
+                              {% render_field formlogin.email class="formcontrol itemToBeFocused" placeholder='Email' %}
+                              {% if formlogin.email.errors %}
+                                {% for err in formlogin.email.errors %}
+                                  <small id='emailhelp' class="form-text err">{{ err }}</small>
+                                {% endfor %}
+                              {% endif %}
+                          </div>
+                      </div>
+
+                  </div>
+
+                  <div class="form-group row mt-4 mb-4">
+
+                      <div class="col-sm-12">
+                          <div class="row">
+                              {% render_field formlogin.password class="formcontrol itemToBeFocused" placeholder='Password' %}
+                              {% if formlogin.password.errors %}
+                                {% for err in formlogin.password.errors %}
+                                  <small id='emailhelp' class="form-text err">{{ err }}</small>
+                                {% endfor %}
+                              {% endif %}
+                          </div>
+                      </div>
+
+                  </div>
+
+
+                  <!-- <div class="form-group forminput">
+                    {{ formlogin.email }}
+                    {% if formlogin.email.errors %}
+                      {% for err in formlogin.email.errors %}
+                        <small id='emailhelp' class="form-text err">{{ err }}</small>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                  <div class="form-group forminput">
+                    {{ formlogin.password }}
+                    {% if formlogin.password.errors %}
+                      {% for err in formlogin.password.errors %}
+                        <small id='emailhelp' class="form-text err">{{ err }}</small>
+                      {% endfor %}
+                    {% endif %}
+                  </div> -->
+                  <div class="form-group forminput">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <button type="submit" class="btn form-control btncolor">Sign In</button>
+                      </div>
+                      <div class="col-sm-6 text-right">
+                          <a class='reset' href="{% url 'password_reset' %}">Forgot Password?</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <p class="alter">Don't have an account? <span class="altlink"onclick="showreg()">Sign Up</span></p>
+                  </div>
+              </form>
+              {% endif %}
+            </div>
+            <div class="col-sm-1 col-md-2"></div>
+          </div>
+        </div>
+        <div class="col-sm-2 col-md-3"></div>
+      </div>
+
+      <div class="row registration my-4 mx-2" id="registration">
+          <div class="col-md-3 col-sm-2"></div>
+          <div class="col-md-6 col-sm-8 reg py-4">
+            <div class="row">
+              <div class="col-sm-12 mt-3">
+                <h1 class="bigtext text-center">Sign Up</h1>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1 col-md-1"></div>
+              <div class="col-sm-10 col-md-10 mx-1">
+                {% if formreg %}
+                  <form action="{% url 'account:register' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if request.GET.next %}
+                      <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {% endif %}
+                    <div class="form-group row forminput">
+                      <label for="id_username" class="col-sm-4 col-form-label">Username</label>
+                      <div class="col-sm-8">
+                        <div class="row">
+                          {{ formreg.username}}
+                        </div>
+                          <div class="row">
+                            {% if formreg.username.errors %}
+                              {% for err in formreg.username.errors %}
+                                <p class='alter err'>{{ err }}</p>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group row forminput">
+                      <label for="id_email" class="col-sm-4 col-form-label">Email</label>
+                      <div class="col-sm-8">
+                        <div class="row">
+                          {{ formreg.email }}
+                        </div>
+                          <div class="row">
+                            {% if formreg.email.errors %}
+                              {% for err in formreg.email.errors %}
+                                <p class='alter err'>{{ err }}</p>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group row forminput">
+                      <label for="id_password1" class="col-sm-4 col-form-label">Password</label>
+                      <div class="col-sm-8">
+                        <div class="row">
+                          {{ formreg.password1 }}
+                        </div>
+                          <div class="row">
+                            {% if formreg.password1.errors %}
+                              {% for err in formreg.password1.errors %}
+                                <p class='alter err'>{{ err }}</p>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group row forminput">
+                      <label for="id_password2" class="col-sm-4 col-form-label">Confirm Password</label>
+                      <div class="col-sm-8">
+                        <div class="row">
+                          {{ formreg.password2 }}
+                        </div>
+                          <div class="row">
+                            {% if formreg.password2.errors %}
+                              {% for err in formreg.password2.errors %}
+                                <p class='alter err'>{{ err }}</p>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group row forminput">
+                      <label for="id_dob" class="col-sm-4 col-form-label">Date of Birth</label>
+                      <div class="col-sm-8">
+                        <div class="row">
+                          {{ formreg.dob }}
+                        </div>
+                          <div class="row">
+                            {% if formreg.dob.errors %}
+                              {% for err in formreg.dob.errors %}
+                                <p class='alter err'>{{ err }}</p>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group row forminput">
+                      <label for="id_dob" class="col-sm-4 col-form-label">Profile Picture</label>
+                      <div class="col-sm-8">
+                        <div class="row">
+                          {{ formreg.userpic }}
+                        </div>
+                          <div class="row">
+                            {% if formreg.userpic.errors %}
+                              {% for err in formreg.userpic.errors %}
+                                <p class='alter err'>{{ err }}</p>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="form-group forminput">
+                      <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-6">
+                          <button type="submit" class="btn form-control btncolor">Sign Up</button>
+                        </div>
+                        <div class="col-sm-3"></div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <p class="alter">Already have an account? <span class="altlink" onclick="showlog()">Sign In</span></p>
+                    </div>
+                  </form>
+                {% endif %}
+              </div>
+              <div class="col-sm-1 col-md-1"></div>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-2"></div>
+      </div>
+      <script type="text/javascript">
+          function showreg(){
+            document.getElementById("login").classList.add('hidediv');
+            document.getElementById("login").classList.remove('showdiv');
+            document.getElementById("registration").classList.add('showdiv');
+            document.getElementById("registration").classList.remove('hidediv');
+            console.log('working');
+          }
+          function showlog(){
+            document.getElementById("registration").classList.add('hidediv');
+            document.getElementById("registration").classList.remove('showdiv');
+            document.getElementById("login").classList.add('showdiv');
+            document.getElementById("login").classList.remove('hidediv');
+            console.log('working');
+          }
+      </script>
+    </body>
+</html>

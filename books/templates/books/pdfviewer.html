@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{{book.title}}</title>
+    {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.2.228/build/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style media="screen">
+      body{
+        box-sizing: border-box;
+        padding: 0;
+        margin:0;
+        background: rgba(0, 0, 0, 0.8);
+      }
+      #canvas-div{
+        width:100%;
+        height:100%;
+        overflow: auto;
+      }
+      .canvas{
+        margin: 5px auto;
+        display:block;
+      }
+      .navi{
+          position: fixed;
+          top:0;
+          height : 60px;
+          width:100%;
+          color : #fff;
+          background-color: #000;
+      }
+      /* p{
+          font-size: 16px;
+          margin:0;
+          padding: 17px 0;
+      } */
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid navi">
+      <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-10">
+              <div class="row mt-3">
+
+                  <div class="col-sm-9">
+                      <p>{{book.title}}</p>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-1"></div>
+      </div>
+    </div>
+    <div id="canvas-div" style="margin-top: 70px;"></div>
+    <script type="text/javascript">
+      let pdfDoc = null;
+      let pageNum = 1;
+      let totalpage = 0;
+      let currentPage = {{page}};
+      let scale = 1.5;
+      let url = '{{ book.file.url }}';
+      let canvas = null;
+      let canvasDiv = document.getElementById('canvas-div');
+      var popupInterval
+
+      pdfjsLib.getDocument(url).promise.then(pdfDoc_ =>{
+        console.log(pdfDoc_);
+        pdfDoc = pdfDoc_;
+        renderPages();
+        setbook({{book.isbn}});
+      });
+
+      function gotopage(num,canvas){
+        canvas.scrollIntoView();
+        popupInterval = setInterval(backtoshelf,500);
+      }
+
+      function setbook(isbn){
+          var setbookurl = '{% url 'books:setcurrentbook' %}?isbn='+isbn;
+          var setrequest = new XMLHttpRequest();
+          setrequest.open('GET', setbookurl, true)
+          setrequest.send()
+      }
+
+      function renderPages(){
+          totalpage = pdfDoc.numPages;
+        for(pageNum=1; pageNum<pdfDoc.numPages; pageNum++ ){
+          canvas = document.createElement('canvas');
+          canvas.id = pageNum;
+          canvas.className = 'canvas';
+          canvasDiv.appendChild(canvas);
+          renderPage(pageNum, canvas);
+        }
+      }
+
+      function renderPage(pageNum, canvas){
+        pdfDoc.getPage(pageNum).then(page => {
+          console.log(page);
+          viewport = page.getViewport(scale);
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          if(pageNum == currentPage){
+            page.render({canvasContext: canvas.getContext('2d'), viewport:viewport}).then(gotopage(pageNum,canvas));
+          }
+          page.render({canvasContext: canvas.getContext('2d'), viewport:viewport});
+        });
+      }
+
+      function backtoshelf(){
+          pages = document.getElementsByTagName('canvas');
+          var page = 1;
+          var itemtop;
+          for(let i=1; i<=pages.length; i++){
+              itemtop = document.getElementById(i);
+              if((itemtop.getBoundingClientRect().y+200) > 0 ){
+                  page = i;
+                  break;
+              }
+          }
+          var pgrequest = new XMLHttpRequest();
+          var pgurl = '{% url 'books:setcurrentpage' %}?page='+page+'&total='+totalpage;
+          pgrequest.onload=function(){
+              
+          }
+          pgrequest.open('GET', pgurl, true);
+          pgrequest.send();
+      }
+
+    </script>
+  </body>
+</html>

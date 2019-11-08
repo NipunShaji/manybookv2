@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>About us</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    {% load static %}
+    <link rel = "icon" href ="{% static 'books/manybook.png' %}" type = "image/x-icon">
+    <style media="screen">
+      .brand{
+        font-size: 2.2em;
+        color:#555;
+      }
+      .brand:hover{
+        color:#555;
+      }
+      .navbar{
+        border-bottom: 1px solid #ddd;
+      }
+      .backarrow{
+        color:#555;
+        font-size: 1.1em;
+      }
+      .maintext{
+        color:#333;
+        font-size: 2.3em;
+      }
+      .aboutul{
+        list-style:none;
+        color:blue;
+      }
+      .aboutul li{
+        padding:10px;
+      }
+      .aboutul li i{
+        font-size:.925em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-2">
+              <a href="{% url 'books:me' %}" class="navbar-brand brand" style="margin-top:5px;"><i class="backarrow material-icons">arrow_back</i></a>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-6">
+              <a href="#" class="navbar-brand brand">About Us</a>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="container">
+      <div class="row my-5">
+        <div class="col-sm-12 text-center">
+          <p class="maintext"><img src="{% static 'books/manybook.png' %}" height="40px" width="40px" alt="">ManyBooks</p>
+        </div>
+        <div class="col-sm-12 text-center">
+          <p class="smalltext">Web Version v1.2</p>
+        </div>
+      </div>
+      <hr>
+      <div class="col-sm-12 text-center my-5">
+        <ul class="aboutul">
+          <li><i class="material-icons">local_phone</i> Contact Us</li>
+          <li><i class="material-icons">warning</i> Disclaimer</li>
+          <li><i class="material-icons">live_help</i> Terms of Use</li>
+        </ul>
+      </div>
+      <hr>
+      <div class="col-sm-12 text-center">
+        copyright &copy ManyBooks @2019
+      </div>
+    </div>
+
+  </body>
+</html>
