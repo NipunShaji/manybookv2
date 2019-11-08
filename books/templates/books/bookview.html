@@ -250,6 +250,14 @@ body{
                 <div class="col-lg-8 product_col">
                     <div class="product_info">
                         <div class="col-sm-12">
+                            <div class="row text-center">
+                                {% if request.user.is_authenticated %}
+                                {% else %}
+                                <p class="text-center mb-2 ml-3" style="font-weight:400;" >You must be be loged in to access full features</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
 
                             <div class="row">
                                 <div class="col-sm-6">
@@ -259,11 +267,11 @@ body{
                                 <div class="col-sm-6">
                                     {% if barcode.image %}
                                         <img src="{{ barcode.image.url }}" style="width:100%;height:auto;">
-                                    
+
                                     {% endif %}
                                 </div>
                             </div>
-                                                                
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="product_text" style="color:#777;">{{book.views}} likes</div>
