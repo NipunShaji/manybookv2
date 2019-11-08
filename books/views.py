@@ -424,10 +424,11 @@ def deletereply(request):
 
 def gen_or_get_barcode(request):
 
-    requesting_url = request.META['HTTP_REFERER']
+    # requesting_url = request.META['HTTP_REFERER']
+    requesting_url = request.build_absolute_uri()
 
     user_email = request.POST.get('share-email')
-    # print("requetsing url ------------",requesting_url)
+    print("requetsing url ------------",requesting_url)
     code128 = barcode.get_barcode_class('code128')
 
     try:
@@ -445,18 +446,18 @@ def gen_or_get_barcode(request):
         # print("-----------",str(short_barcode_request))
         if(short_barcode_request['status'] == 'ok'):
             barcode_obj.short_url = short_barcode_request['link']
-        
+
         barcode_obj.save()
-        
+
     if not barcode_obj.image and barcode_obj.short_url :
         # print("no image but shorturl exists")
-            
+
         barcode_img = code128(barcode_obj.short_url)
         barcode_img.save('barcode')
 
         filename = 'barcode_'+barcode_obj.short_url.split('/')[1]+".svg"
         barcode_obj.image.save(filename,File(open('barcode.svg')))
-    
+
 
     return barcode_obj
 
@@ -465,7 +466,7 @@ def shorten_url(url):
     # print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^",url)
 
     linkRequest = {
-        "destination": url , 
+        "destination": url ,
         # "destination" : "https://barcodemoviedb.herokuapp.com/movie/baby/",
         "domain": { "fullName": "rebrand.ly" }
     }
@@ -475,7 +476,7 @@ def shorten_url(url):
     "apikey": "2530603f8d76454fa2c3eaaa19d59f17",
     }
     try:
-        response = requests.post("https://api.rebrandly.com/v1/links", 
+        response = requests.post("https://api.rebrandly.com/v1/links",
             data = json.dumps(linkRequest),
             headers=requestHeaders)
     except requests.exceptions.ConnectionError:
