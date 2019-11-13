@@ -19,6 +19,9 @@ from .models import Book, BookShelf, Downloads, Genre, Language, Rating, Reply, 
 import requests,barcode
 from django.core.files import File
 
+def trial(request):
+    return render(request, 'books/captureTrial.html')
+
 @login_required
 def pdfviewer(request):
     context = {}
