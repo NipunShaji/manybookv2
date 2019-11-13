@@ -20,7 +20,7 @@ import requests,barcode
 from django.core.files import File
 
 def trial(request):
-    return render(request, 'books/captureTrial.html')
+    return render(request, 'books/app1.html')
 
 @login_required
 def pdfviewer(request):
