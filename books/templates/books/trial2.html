@@ -1,0 +1,46 @@
+
+
+<!doctype HTML>
+
+<html>
+
+<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+
+<script src="https://raw.githack.com/jeromeetienne/AR.js/1.7.5/aframe/build/aframe-ar.js"></script>
+<script>
+function getshot(){
+	var video = document.querySelector('video');
+	let frame = captureVideoFrame("video", "png");
+	console.log(frame);
+}
+</script>
+<style>
+.cap{
+	color:red;
+	position: fixed;
+	top:10px;
+	left:10px;
+	z-index: 200;
+}
+</style>
+
+  <body style='margin : 0px; overflow: hidden;'>
+	<button class='cap'>Capture</button>
+
+    <a-scene embedded arjs>
+
+  	<a-marker preset="hiro">
+
+            <a-box position='0 0.5 0' material='color: yellow;'></a-box>
+
+  	</a-marker>
+
+  	<a-entity camera></a-entity>
+
+    </a-scene>
+
+  </body>
+
+</html>
+
+
