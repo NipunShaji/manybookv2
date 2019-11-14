@@ -21,7 +21,7 @@ from books.views import (
         newreply,
         deletecomment,
         deletereply,
-        trial,
+        # trial,
 )
 
 app_name = 'books'
@@ -47,5 +47,5 @@ urlpatterns = [
         path('newreply/', newreply, name='newreply'),
         path('deletecomment/', deletecomment, name='deletecomment'),
         path('deletereply/', deletereply, name='deletereply'),
-        path('trial/', trial, name='trial'),
+        # path('trial/', trial, name='trial'),
 ]

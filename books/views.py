@@ -14,13 +14,11 @@ from account.models import Account
 from .forms import AddBook
 from .models import Book, BookShelf, Downloads, Genre, Language, Rating, Reply, Comment, Barcode
 
-
-
 import requests,barcode
 from django.core.files import File
 
-def trial(request):
-    return render(request, 'books/trial2.html')
+# def trial(request):
+#     return render(request, 'books/trial2.html')
 
 @login_required
 def pdfviewer(request):
@@ -42,21 +40,8 @@ def home(request):
     if request.user.is_authenticated:
         context['auth'] = True
     allBooks = Book.objects.all()
-    genre = Genre.objects.all()
-    try:
-        context['mostviewed'] = allBooks.order_by('-views')[:12]
-        context['new'] = allBooks.order_by('-created_at')[:12]
-        context['romance'] =  allBooks.filter(genre = genre.get(name = 'Romance')).order_by('-views')[:6]
-        context['fantacy'] = allBooks.filter(genre = genre.get(name = 'Fantasy')).order_by('-views')[:6]
-        context['scifi'] = allBooks.filter(genre = genre.get(name = 'Science Fiction')).order_by('-views')[:6]
-        context['western'] = allBooks.filter(genre = genre.get(name = 'Western')).order_by('-views')[:6]
-        context['thriller'] = allBooks.filter(genre = genre.get(name = 'Thriller')).order_by('-views')[:6]
-        context['mystery'] = allBooks.filter(genre = genre.get(name = 'Mystery')).order_by('-views')[:6]
-        context['detective'] = allBooks.filter(genre = genre.get(name = 'Detective Story')).order_by('-views')[:6]
-        context['dystopia'] = allBooks.filter(genre = genre.get(name = 'Dystopia')).order_by('-views')[:6]
-    except Genre.DoesNotExist:
-        pass
-
+    context['mostviewed'] = allBooks.order_by('-views')[:12]
+    context['new'] = allBooks.order_by('-created_at')[:12]
     return render(request, 'books/index.html', context)
 
 @login_required
@@ -95,7 +80,7 @@ def bookview(request,isbn=None):
     if bookrating == 0:
         context['ratingnumber'] = 0
     else:
-        context['ratingnumber'] = Rating.objects.filter(book=book).count()
+        context['ratingnumber'] = bookrating
     if request.user.is_authenticated:
         if Rating.objects.filter(book=book, user=request.user).count() == 0:
             context['userRated'] = False
@@ -128,7 +113,7 @@ def catview(request):
         gen = request.POST.get('category','all')
         print('lang print next')
         print(request.POST.get('category'))
-        books = Book.objects.all()
+        books = Book.objects.select_related('language').all()
         if lang != 'all':
             language = Language.objects.get(lang=lang)
             books = books.filter(language = language)
@@ -199,9 +184,9 @@ def bookshelf(request):
     context['search'] = True
     if request.user.is_authenticated:
         context['auth'] = True
-        context['books'] = BookShelf.objects.filter(user=Account.objects.get(username=request.user))
+        context['books'] = BookShelf.objects.filter(user=request.user)
         try:
-            context['currentbook'] = BookShelf.objects.filter(user=Account.objects.get(username=request.user)).get(iscurrentbook=True)
+            context['currentbook'] = context['books'].get(iscurrentbook=True)
             if context['currentbook'].totalpage == 0:
                 context['percent'] = 0;
             else:
@@ -427,11 +412,7 @@ def deletereply(request):
 
 def gen_or_get_barcode(request):
 
-    # requesting_url = request.META['HTTP_REFERER']
     requesting_url = request.build_absolute_uri()
-
-    user_email = request.POST.get('share-email')
-    print("requetsing url ------------",requesting_url)
     code128 = barcode.get_barcode_class('code128')
 
     try:
@@ -446,14 +427,12 @@ def gen_or_get_barcode(request):
         barcode_obj = Barcode(long_url=requesting_url)
 
         short_barcode_request = json.loads(shorten_url(requesting_url))
-        # print("-----------",str(short_barcode_request))
         if(short_barcode_request['status'] == 'ok'):
             barcode_obj.short_url = short_barcode_request['link']
 
         barcode_obj.save()
 
     if not barcode_obj.image and barcode_obj.short_url :
-        # print("no image but shorturl exists")
 
         barcode_img = code128(barcode_obj.short_url)
         barcode_img.save('barcode')
