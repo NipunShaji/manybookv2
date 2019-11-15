@@ -1,56 +1,55 @@
-	{% extends 'books/base.html' %}
-	{% load static %}
-	{% load widget_tweaks %}
+{% extends 'books/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
 
-	{% block css %}
+{% block css %}
 	*{
 		font-family: 'Roboto', sans-serif;
 	}
-	{% endblock %}
+{% endblock %}
 
-	{% block js %}
-		function sendform(){
-			document.getElementById('button').disabled = true;
-			document.getElementById('form').submit();
-		}
-	{% endblock %}
+{% block js %}
+	function sendform(){
+		document.getElementById('button').disabled = true;
+		document.getElementById('form').submit();
+	}
+{% endblock %}
 
-	{% block exlinks %}
+{% block exlinks %}
 	<link rel="stylesheet" type="text/css" href="{% static 'loginfonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/bootstrap/css/bootstrap.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginfonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animate/animate.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/css-hamburgers/hamburgers.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animsition/css/animsition.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/select2/select2.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/daterangepicker/daterangepicker.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'logincss/util.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'logincss/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginfonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animate/animate.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/css-hamburgers/hamburgers.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/animsition/css/animsition.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/select2/select2.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'loginvendor/daterangepicker/daterangepicker.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'logincss/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'logincss/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'mystyle.css' %}">
 
-		<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+	<script src="{% static 'loginvendor/jquery/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'loginvendor/animsition/js/animsition.min.js' %}"></script>
+	<script src="{% static 'loginvendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'loginvendor/bootstrap/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'loginvendor/select2/select2.min.js' %}"></script>
+	<script src="{% static 'loginvendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'loginvendor/daterangepicker/daterangepicker.js' %}"></script>
+	<script src="{% static 'loginvendor/countdowntime/countdowntime.js' %}"></script>
+	<script src="{% static 'loginjs/main.js' %}"></script>
+{% endblock %}
 
-
-		<script src="{% static 'loginvendor/jquery/jquery-3.2.1.min.js' %}"></script>
-			<script src="{% static 'loginvendor/animsition/js/animsition.min.js' %}"></script>
-			<script src="{% static 'loginvendor/bootstrap/js/popper.js' %}"></script>
-			<script src="{% static 'loginvendor/bootstrap/js/bootstrap.min.js' %}"></script>
-			<script src="{% static 'loginvendor/select2/select2.min.js' %}"></script>
-			<script src="{% static 'loginvendor/daterangepicker/moment.min.js' %}"></script>
-			<script src="{% static 'loginvendor/daterangepicker/daterangepicker.js' %}"></script>
-			<script src="{% static 'loginvendor/countdowntime/countdowntime.js' %}"></script>
-			<script src="{% static 'loginjs/main.js' %}"></script>
-			<link rel="stylesheet" type="text/css" href="{% static 'mystyle.css' %}">
-	{% endblock %}
-
-
-	{% block content %}
+{% block content %}
 	<div class="limiter">
 		<div class="container-login100">
-			<div class="col-sm-12" style='height:60px;'>
 
-			</div>
+			<!-- To add padding height for main content so that navbar dosent hide content -->
+			<div class="col-sm-12" style='height:60px;'></div>
+
 			<div class="wrap-login100">
+
 				<div class="login100-form-title" style="background-image: url({% static 'loginimages/bg-01.jpg' %});">
 					<span class="login100-form-title-1">
 						Sign In
@@ -59,10 +58,13 @@
 
 				<form id="form" class="login100-form validate-form" action="" method="post">
 
-	                    {% csrf_token %}
-						{% if next %}
-	                      <input type="hidden" name="next" value="{{ next }}">
-	                    {% endif %}
+	                {% csrf_token %}
+
+					<!-- Input to hold the next parameter -->
+					{% if next %}
+	                <input type="hidden" name="next" value="{{ next }}">
+	                {% endif %}
+
 					<div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
 						<span class="label-input100">Email</span>
 						{% render_field form.username class="input100" placeholder='Email' %}
@@ -71,7 +73,6 @@
 							<span class="focus-input100 pt-5" style="color:red;">{{err}}</span>
 						  {% endfor %}
 						{% endif %}
-
 					</div>
 
 					{{form.next}}
@@ -93,7 +94,6 @@
 								Sign Up?
 							</a>
 						</div>
-
 						<div>
 							<a href="{% url 'password_reset' %}" class="txt1">
 								Forgot Password?
@@ -106,9 +106,9 @@
 							Login
 						</button>
 					</div>
+					
 				</form>
 			</div>
 		</div>
-	 </div>
-
-	{% endblock %}
+	</div>
+{% endblock %}

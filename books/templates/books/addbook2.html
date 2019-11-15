@@ -2,62 +2,54 @@
 {% load widget_tweaks %}
 {% load static %}
 
-    {% block exlinks %}
-        <link href="{% static 'addbookvendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
-        <link href="{% static 'addbookvendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
-        <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
-        <!-- <link href="{% static 'addbookvendor/select2/select2.min.css' %}" rel="stylesheet" media="all"> -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css">
-        <link href="{% static 'addbookvendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
-        <link href="{% static 'addbookcss/main.css' %}" rel="stylesheet" media="all">
-        <!-- <script src="{% static 'addbookvendor/jquery/jquery.min.js' %}"></script> -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
-        <!-- <script src="{% static 'addbookvendor/select2/select2.min.js' %}"></script> -->
-        <script src="{% static 'addbookvendor/datepicker/moment.min.js' %}"></script>
-        <script src="{% static 'addbookvendor/datepicker/daterangepicker.js' %}"></script>
-        <script src="{% static 'addbookjs/global.js' %}"></script>
+{% block exlinks %}
+    <link href="{% static 'addbookvendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'addbookvendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css">
+    <link href="{% static 'addbookvendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'addbookcss/main.css' %}" rel="stylesheet" media="all">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
 
-        <link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
-    {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+    <script src="{% static 'addbookvendor/datepicker/moment.min.js' %}"></script>
+    <script src="{% static 'addbookvendor/datepicker/daterangepicker.js' %}"></script>
+    <script src="{% static 'addbookjs/global.js' %}"></script>
+{% endblock %}
 
-    {% block css %}
-
+{% block css %}
     .card-heading{
-       background: url("{% static 'images/bookimage.jpg' %}") top left/cover no-repeat;
-       overflow:hidden;
+        background: url("{% static 'images/bookimage.jpg' %}") top left/cover no-repeat;
+        overflow:hidden;
     }
     .selectbox{
-         background-color: #fff;
-         -webkit-appearance: none;
-         -moz-appearance: none;
-         appearance: none;
-         background-image: url(...);
-         width: 100%;
-         border: none;
-         border-bottom: 1px solid #ccc;
-         padding: 8px 15px;
-         color: #9a9a9a;
-         font-size: 1.15em;
-         font-weight: 550;
+        background-color: #fff;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url(...);
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        padding: 8px 15px;
+        color: #9a9a9a;
+        font-size: 1.15em;
+        font-weight: 550;
     }
-
-
-.select2-selection__rendered {
-    line-height: 35px !important;
-}
-.select2-container .select2-selection--single {
-    height: 34px !important;
-}
-.select2-selection__arrow {
-    height: 33px !important;
-}
-
-
+    .select2-selection__rendered {
+        line-height: 35px !important;
+    }
+    .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+    .select2-selection__arrow {
+        height: 33px !important;
+    }
     .description{
-      color: #9a9a9a;
-      font-size: 1.15em;
-      font-weight: 550;
+        color: #9a9a9a;
+        font-size: 1.15em;
+        font-weight: 550;
     }
     .err{
         color:red;
@@ -65,21 +57,15 @@
     .err1{
         color:red;
     }
+{% endblock %}
 
-    {% endblock %}
+{% block js %}
+    let isbnchecked, isbncheckinterval, form, button, isbnvalid, valid;
 
-    {% block js %}
     $(document).ready(function() {
-      $('.js-example-basic-multiple').select2();
-      $('.js-example-basic-single').select2();
+        $('.js-example-basic-multiple').select2();
+        $('.js-example-basic-single').select2();
     });
-
-
-
-    let isbnchecked;
-    let isbncheckinterval;
-    let form,button,isbnvalid;
-    let valid;
 
     function checkisbn(){
         isbn = document.getElementById('id_isbn').value;
@@ -131,6 +117,7 @@
         valid = true;
         isbnchecked = false;
         $('.err').remove();
+
         if(!document.getElementById('id_title').checkValidity()){
           addError('title','Field required');
           valid = false;
@@ -170,183 +157,170 @@
         if(isbncheckinterval){
             clearInterval(isbncheckinterval);
         }
+
         isbncheckinterval = setInterval(isisbnchecked,100);
         checkisbn();
     }
+{% endblock %}
 
-    {% endblock %}
+{% block content %}
+    <div class="page-wrapper p-t-180 p-b-100 font-robo" style="background-color:#eee;">
+        <div class="wrapper wrapper--w960">
+            <div class="card card-2">
+                <div class="card-heading"></div>
+                <div class="card-body">
+                    <h2 class="title">Add Book</h2>
+                    <form id="addbook" method="POST" action="{% url 'books:addbook'%}" enctype="multipart/form-data">
+                        {% csrf_token %}
 
-    {% block content %}
-        <div class="page-wrapper p-t-180 p-b-100 font-robo" style="background-color:#eee;">
-            <div class="wrapper wrapper--w960">
-                <div class="card card-2">
-                    <div class="card-heading"></div>
-                    <div class="card-body">
-                        <h2 class="title">Add Book</h2>
-                        <form id="addbook" method="POST" action="{% url 'books:addbook'%}" enctype="multipart/form-data">
-                            {% csrf_token %}
-
-                            <div class="row" id="title" style="padding:10px;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;">
-                                    {% render_field form.title class="input--style-2" placeholder="Title*" required='' %}
-                                </div>
-
-                                {% if form.title.errors %}
-                                  {% for err in form.title.errors %}
+                        <div class="row" id="title" style="padding:10px;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;">
+                                {% render_field form.title class="input--style-2" placeholder="Title*" required='' %}
+                            </div>
+                            {% if form.title.errors %}
+                                {% for err in form.title.errors %}
                                     <span class="err">{{err}}</span>
-                                  {% endfor %}
-                                {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="row" id="author" style="padding:10px;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;">
+                                {% render_field form.author class="input--style-2" placeholder="Author*" required='' %}
                             </div>
-
-                            <div class="row" id="author" style="padding:10px;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;">
-                                  {% render_field form.author class="input--style-2" placeholder="Author*" required='' %}
-                                 </div>
-
-                                 {% if form.author.errors %}
-                                   {% for err in form.author.errors %}
-                                     <span class="err">{{err}}</span>
-                                   {% endfor %}
-                                 {% endif %}
-                            </div>
-
-
-                            <div class="row" id="isbn" style="padding:10px;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;">
-                                  {% render_field form.isbn class="input--style-2" placeholder="ISBN*" required='' %}
-                                </div>
-
-                                {% if form.isbn.errors %}
-                                  {% for err in form.isbn.errors %}
+                            {% if form.author.errors %}
+                                {% for err in form.author.errors %}
                                     <span class="err">{{err}}</span>
-                                  {% endfor %}
-                                {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="row" id="isbn" style="padding:10px;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;">
+                                {% render_field form.isbn class="input--style-2" placeholder="ISBN*" required='' %}
                             </div>
-
-                            <div class="row" id="series" style="padding:10px;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;">
-                                  {% render_field form.series class="input--style-2" placeholder="Series*" required='' %}
-                                </div>
-
-                                {% if form.series.errors %}
-                                  {% for err in form.series.errors %}
+                            {% if form.isbn.errors %}
+                                {% for err in form.isbn.errors %}
                                     <span class="err">{{err}}</span>
-                                  {% endfor %}
-                                {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="row" id="series" style="padding:10px;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;">
+                                {% render_field form.series class="input--style-2" placeholder="Series*" required='' %}
                             </div>
+                            {% if form.series.errors %}
+                                {% for err in form.series.errors %}
+                                    <span class="err">{{err}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
 
-
-
-                            <div class="row" id="language" style="padding:10px;padding-left:0;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;border-bottom:none;">
-                                  <div class="col-sm-3">
-                                      <p style="font-color:#555;font-size:1.3em;font-weight:450;" >Language*</p>
-                                  </div>
-                                  <div class="col-sm-9">
+                        <div class="row" id="language" style="padding:10px;padding-left:0;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;border-bottom:none;">
+                                <div class="col-sm-3">
+                                    <p style="font-color:#555;font-size:1.3em;font-weight:450;" >Language*</p>
+                                </div>
+                                <div class="col-sm-9">
                                     <select class="selectbox js-example-basic-single" name="language" id="id_language" required>
-                                      {% for language in languages %}
-                                        <option value="{{language}}">{{language}}</option>
-                                      {% endfor %}
+                                        {% for language in languages %}
+                                            <option value="{{language}}">{{language}}</option>
+                                        {% endfor %}
                                     </select>
-                                  </div>
                                 </div>
-
-                                {% if form.language.errors %}
-                                  {% for err in form.language.errors %}
-                                    <span class="err">{{err}}</span>
-                                  {% endfor %}
-                                {% endif %}
                             </div>
-                            <div class="row" id="genre" style="padding:10px;padding-left:0;">
-                              <div class="input-group" style="margin-bottom:0; margin-top:32px;border-bottom:none;">
+                            {% if form.language.errors %}
+                                {% for err in form.language.errors %}
+                                    <span class="err">{{err}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="row" id="genre" style="padding:10px;padding-left:0;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;border-bottom:none;">
                                 <div class="col-sm-3">
                                     <p style="font-color:#555;font-size:1.3em;font-weight:450;" >Genre*</p>
                                 </div>
                                 <div class="col-sm-9">
                                     <select class="js-example-basic-multiple" name="genre" id="id_genre" required='' multiple="multiple" style="width:100%;border:none;border-bootom:2px solid #999;">
-                                      {% for genre in genres %}
-                                        <option value="{{genre.id}}">{{genre}}</option>
-                                      {% endfor %}
+                                        {% for genre in genres %}
+                                            <option value="{{genre.id}}">{{genre}}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
-                              </div>
-
-                              {% if form.genre.errors %}
-                                {% for err in form.genre.errors %}
-                                  <span class="err">{{err}}</span>
-                                {% endfor %}
-                              {% endif %}
                             </div>
+                            {% if form.genre.errors %}
+                                {% for err in form.genre.errors %}
+                                    <span class="err">{{err}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
 
+                        {{form.user.as_hidden}}
 
-                            {{form.user.as_hidden}}
-
-                            <div class="row" id="description" style="padding:10px;">
-                                <div class="input-group" style="border:none;margin-bottom:0; margin-top:32px;">
-                                  <div class="row">
+                        <div class="row" id="description" style="padding:10px;">
+                            <div class="input-group" style="border:none;margin-bottom:0; margin-top:32px;">
+                                <div class="row">
                                     <div class="col-sm-3">
-                                      <p class="description">Description*</p>
+                                        <p class="description">Description*</p>
                                     </div>
                                     <div class="col-sm-8 form control">
-                                      {% render_field form.description style='white-space: pre-wrap;' required='' %}
+                                        {% render_field form.description style='white-space: pre-wrap;' required='' %}
                                     </div>
-                                  </div>
                                 </div>
-
-                              {% if form.description.errors %}
+                            </div>
+                            {% if form.description.errors %}
                                 {% for err in form.description.errors %}
-                                  <span class="err">{{err}}</span>
+                                    <span class="err">{{err}}</span>
                                 {% endfor %}
-                              {% endif %}
-                            </div>
+                            {% endif %}
+                        </div>
 
-                            <div class="row" id="file" style="padding:10px;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;border:none;">
-                                  <div class="row">
+                        <div class="row" id="file" style="padding:10px;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;border:none;">
+                                <div class="row">
                                     <div class="col-sm-3 description">
-                                      Book*
+                                        Book*
                                     </div>
                                     <div class="col-sm-9">
-                                      {% render_field form.file required='' accept='.pdf' %}
+                                        {% render_field form.file required='' accept='.pdf' %}
                                     </div>
-                                  </div>
-                                  <p >Only pdf files accepted</p>
                                 </div>
-
-                                {% if form.file.errors %}
-                                  {% for err in form.file.errors %}
-                                    <span class="err">{{err}}</span>
-                                  {% endfor %}
-                                {% endif %}
+                                <p >Only pdf files accepted</p>
                             </div>
+                            {% if form.file.errors %}
+                                {% for err in form.file.errors %}
+                                    <span class="err">{{err}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
 
-                            <div class="row" id="cover" style="padding:10px;">
-                                <div class="input-group" style="margin-bottom:0; margin-top:32px;border:none;">
-                                  <div class="row">
+                        <div class="row" id="cover" style="padding:10px;">
+                            <div class="input-group" style="margin-bottom:0; margin-top:32px;border:none;">
+                                <div class="row">
                                     <div class="col-sm-3 description">
-                                      Cover
+                                        Cover
                                     </div>
                                     <div class="col-sm-9">
-                                      {% render_field form.cover accept=".png,.jpg,.jpeg"%}
-
+                                        {% render_field form.cover accept=".png,.jpg,.jpeg"%}
                                     </div>
-                                  </div>
-                                  <p >Only png,jpg & jpeg files</p>
                                 </div>
-
-                                {% if form.cover.errors %}
-                                  {% for err in form.cover.errors %}
+                                <p >Only png,jpg & jpeg files</p>
+                            </div>
+                            {% if form.cover.errors %}
+                                {% for err in form.cover.errors %}
                                     <span class="err">{{err}}</span>
-                                  {% endfor %}
-                                {% endif %}
-                            </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
 
-                            <div class="p-t-30">
-                                <button id="button" class="btn btn--radius btn--green" onclick='checkforerrors(event)'>Add Book</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="p-t-30">
+                            <button id="button" class="btn btn--radius btn--green" onclick='checkforerrors(event)'>Add Book</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    {% endblock %}
+    </div>
+{% endblock %}

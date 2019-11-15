@@ -39,7 +39,7 @@ def home(request):
     context['search'] = True
     if request.user.is_authenticated:
         context['auth'] = True
-    allBooks = Book.objects.all()
+    allBooks = Book.objects.select_related('user').all()
     context['mostviewed'] = allBooks.order_by('-views')[:12]
     context['new'] = allBooks.order_by('-created_at')[:12]
     return render(request, 'books/index.html', context)

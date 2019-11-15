@@ -1,9 +1,8 @@
 from django.urls import path
 from books.views import (
         home,
-        addbook,\
-        # me,
-        bookview,\
+        addbook,
+        bookview,
         catview,
         search,
         addtoshelf,
@@ -21,7 +20,6 @@ from books.views import (
         newreply,
         deletecomment,
         deletereply,
-        # trial,
 )
 
 app_name = 'books'

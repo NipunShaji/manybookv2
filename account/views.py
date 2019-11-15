@@ -1,7 +1,8 @@
+from random import randint
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.decorators import login_required
-from random import randint
 
 from .models import Account
 from .forms import RegistrationForm, LoginForm, UpdateForm
@@ -9,7 +10,9 @@ from .forms import RegistrationForm, LoginForm, UpdateForm
 def registration_view(request):
     if request.user.is_authenticated:
         return redirect('books:home')
+
     context = {}
+
     if request.POST:
         formreg = RegistrationForm(request.POST, request.FILES)
         if formreg.is_valid():
@@ -65,19 +68,16 @@ def login_view(request,next='/'):
                     print('yesss')
                     return redirect(request.POST['next'])
                 return redirect('books:home')
-    print(next)
+
     if request.GET.get('next'):
         next = request.GET.get('next')
+
     return render(request, 'account/login1.html', context={
         'formlogin' : formlogin,
         'formreg' : RegistrationForm(),
         'login' : True,
         'next' : next,
     })
-
-def profilepage(request):
-    context = {}
-    context['']
 
 @login_required
 def update_view(request):
@@ -87,9 +87,11 @@ def update_view(request):
         'username':request.user.username,
         'dob':request.user.dob,
     })
+
     context = {}
     context['auth'] = True
     context['edit'] = False
+
     if not request.user.is_authenticated:
         return redirect('account:login')
 
@@ -101,5 +103,6 @@ def update_view(request):
             context['edit'] = False
         else:
             context['edit'] = True
+            
     context['form'] = form
     return render(request, 'account/update.html', context)

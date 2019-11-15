@@ -1,15 +1,16 @@
 from django.db import models
 from account.models import Account
-from multiselectfield import MultiSelectField
 from django.utils import timezone
 
 class Genre(models.Model):
+
     name = models.CharField(max_length=100, null=False, unique=True)
 
     def __str__(self):
         return self.name
 
 class Language(models.Model):
+
     lang        = models.CharField(max_length=30,primary_key=True)
 
     def __str__(self):
@@ -36,6 +37,7 @@ class Book(models.Model):
         return self.title
 
 class BookShelf(models.Model):
+
     user                = models.ForeignKey(Account, on_delete=models.CASCADE)
     book                = models.ForeignKey(Book, on_delete=models.CASCADE)
     iscurrentbook       = models.BooleanField(default=False)
@@ -46,6 +48,7 @@ class BookShelf(models.Model):
         return self.user.username
 
 class Downloads(models.Model):
+
     user                = models.ForeignKey(Account, on_delete=models.CASCADE)
     book                = models.ForeignKey(Book, on_delete=models.CASCADE)
     created_at          = models.DateTimeField(default = timezone.now)
@@ -54,6 +57,7 @@ class Downloads(models.Model):
         return self.book.title
 
 class Comment(models.Model):
+
     book        = models.ForeignKey(Book, on_delete=models.CASCADE)
     user        = models.ForeignKey(Account, on_delete=models.CASCADE)
     text        = models.CharField(max_length=512, null=False)
@@ -66,9 +70,10 @@ class Comment(models.Model):
 
 
 class Reply(models.Model):
+
     class Meta:
         ordering = ['-created_at']
-        
+
     comment     = models.ForeignKey(Comment, on_delete=models.CASCADE)
     user        = models.ForeignKey(Account, on_delete=models.CASCADE)
     text        = models.CharField(max_length=512, null=False)
@@ -80,6 +85,7 @@ class Reply(models.Model):
         return str(self.id)
 
 class Rating(models.Model):
+
     book        = models.ForeignKey(Book, on_delete=models.CASCADE)
     user        = models.ForeignKey(Account, on_delete=models.CASCADE)
     userrating  = models.PositiveSmallIntegerField(default=0, null=False)
@@ -89,7 +95,7 @@ class Rating(models.Model):
 
 
 class Barcode(models.Model):
-
+    
     long_url     = models.URLField(primary_key=True)
     short_url    = models.URLField(default="")
     image        = models.FileField(upload_to='images/barcodes/')

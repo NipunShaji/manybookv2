@@ -2,49 +2,50 @@
 {% load static %}
 
 {% block exlinks %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
 {% endblock %}
 
-		{% block extra %}
-		<div id="popupok">
-            <div class="row">
-              <div class="col-sm-2">
-                <i class="material-icons icon">done</i>
-              </div>
-              <div class="col-sm-10 text-center">
-                Book removed
-              </div>
-            </div>
-        </div>
-        <div id="popuperr">
-            <div class="row">
-              <div class="col-sm-2">
-                <i class="material-icons icon">block</i>
-              </div>
-              <div class="col-sm-10 text-center">
-                Some Error Occured
-              </div>
-            </div>
-        </div>
-		{% endblock %}
+{% block extra %}
+	<div id="popupok">
+	    <div class="row">
+	      	<div class="col-sm-2">
+	        	<i class="material-icons icon">done</i>
+	      	</div>
+	      	<div class="col-sm-10 text-center">
+	        	Book removed
+	      	</div>
+	    </div>
+	</div>
+	<div id="popuperr">
+	    <div class="row">
+	      	<div class="col-sm-2">
+	        	<i class="material-icons icon">block</i>
+	      	</div>
+	      	<div class="col-sm-10 text-center">
+	        	Some Error Occured
+	      	</div>
+	    </div>
+	</div>
+{% endblock %}
 
-		{% block js %}
-		let id;
-		var response;
-		var popupInterval;
-		var request;
-		var url;
-		function clearpopup(){
-		  clearInterval(popupInterval);
-		  $(id).fadeOut();
-		}
-		function deletebook(isbn){
-		  url = '{% url 'books:deleteshelf' %}?isbn='+isbn;
-		  request = new XMLHttpRequest()
-		  request.onload = function(){
-			console.log(request.response);
+{% block js %}
+	let id;
+	var response;
+	var popupInterval;
+	var request;
+	var url;
+
+	function clearpopup(){
+	  	clearInterval(popupInterval);
+	  	$(id).fadeOut();
+	}
+
+	function deletebook(isbn){
+	  	url = '{% url 'books:deleteshelf' %}?isbn='+isbn;
+	  	request = new XMLHttpRequest()
+	  	request.onload = function(){
 			response = JSON.parse(request.response);
 			if( response['status'] == 'ok'){
 			  $('#'+isbn).fadeOut();
@@ -55,316 +56,303 @@
 			}
 			popupInterval = setInterval(clearpopup,3000);
 			$(id).fadeIn();
-		  }
-		  request.open('GET',url,true);
-		  request.send()
-		}
-		function downloaded(isbn,file){
-			var downloadurl = '{% url 'books:downloaded' %}?isbn='+isbn;
-			var downloadRequest = new XMLHttpRequest();
-			downloadRequest.open('GET',downloadurl,true);
-			downloadRequest.onload=openInNewTab(file);
-			downloadRequest.send();
-		}
-		function openInNewTab(url) {
-		  var win = window.open(url, '_blank');
-		  win.focus();
-		}
-		{% endblock %}
+	  	}
+	  	request.open('GET',url,true);
+	  	request.send()
+	}
 
-		{% block css %}
-		.item{
-		  background-color: #fff;
-		}
-		.navbar{
-		  background-color:  #007cc4;
-		}
-		.navbar-brand{
-		  color: #fff;
-		  font-size: 3em;
-		  font-family: 'Amatic SC', cursive;
-		  letter-spacing: 3px;
-		  text-align: left;
-		}
-		.navbar-brand:hover{
-		  color: #fff;
-		}
-		.bottomnav{
-			position: fixed;
-			bottom: 0;
-			/* width:100%; */
-			height:50px;
-			background-color: #fff;
-			border-top: 1px solid #ddd;
-		}
-		.bottomnavtext{
-			font-size: .7em;
-		}
-		.navactive{
-			color : #007cc4;
-		}
-		.bookshelfhead{
-			font-size: 1.8em;
-			font-weight: bold;
-			color: #555;
-		}
-		.headhr{
-			border: none;
-			background: #999;
-			height: 1px;
-			padding:0;
-			margin:0;
-		}
-		.booktab{
-			border: 1px solid #ddd;
-			border-radius: 4px;
-			margin: 0 0px 0 0;
-		}
-		.booktitle{
-			font-size: 0.9em;
-			margin : 0;
-			margin-bottom: 5px;
-		}
-		.bookauthor{
-			font-size: 0.8em;
-			margin: 0;
-			margin-bottom: 10px;
-		}
-		.currbookbuttondelete{
-			border: 1px solid red;
-			color: red;
-			background-color: #ececec;
-			font-size: .8em;
-			padding : 3px 5px;
-		}
-		.currbookbuttondelete:hover{
-			/* box-shadow: 0 0 5px 2px #aaa; */
-			background-color: red;
-			color:#ececec;
-		}
-		.bookbuttondelete{
-			border: 1px solid red;
-			color: red;
-			background-color: #fff;
-			font-size: .8em;
-			padding : 3px 5px;
-		}
-		.bookbuttondelete:hover{
-			/* box-shadow: 0 0 5px 2px #aaa; */
-			background-color: red;
-			color:#fff;
-		}
-		.currbookbutton{
-			border: 1px solid #264348;
-			color: #264348;
-			background-color: #ececec;
-			font-size: .8em;
-			padding : 3px 5px;
-		}
-		.currbookbutton:hover{
-			/* box-shadow: 0 0 5px 2px #aaa; */
-			background-color: #264348;
-			color:#ececec;
-		}
-		.bookbutton{
-			border: 1px solid #264348;
-			color: #264348;
-			background-color: #fff;
-			font-size: .8em;
-			padding : 3px 5px;
-		}
-		.bookbutton:hover{
-			/* box-shadow: 0 0 5px 2px #aaa; */
-			background-color: #264348;
-			color:#fff;
-		}
-		.nobook{
-		  box-shadow: 0 0 5px 2px #aaa;
-		}
-		.nobookcontent{
-		  font-size: 1.5em;
-		  color: #555;
-		}
-		.nobookcontent2{
-		  font-size: 1.2em;
-		  color: #555;
-		}
-		.nobooklink{
-		  color:blue;
-		}
-		.nobooklink:hover{
-		  text-decoration: none;
-		}
-		#popupok{
-			display:none;
-			position: fixed;
-			right: 50px;
-			top:100px;
-			border-radius: 1px;
-			border: 1px solid #eee;
-			box-shadow: 0 0 5px 2px #555;
-			height:85px;
-			width: 240px;
-			padding: 30px;
-			background-color: #fff;
-			color:black;
-			z-index: 3;
-		}
-		#popuperr{
-			display:none;
-			position: fixed;
-			right: 50px;
-			top:100px;
-			border-radius: 2px;
-			border: 1px solid #eee;
-			box-shadow: 0 0 5px 2px #ccc;
-			height:85px;
-			width: 300px;
-			padding: 30px;
-			background-color: #fff;
-			color:black;
-			z-index: 3;
-		}
-		.showpopup{
-			display: block;
-			z-index: 10;
-		}
-		{% endblock %}
+	function downloaded(isbn,file){
+		var downloadurl = '{% url 'books:downloaded' %}?isbn='+isbn;
+		var downloadRequest = new XMLHttpRequest();
+		downloadRequest.open('GET',downloadurl,true);
+		downloadRequest.onload=openInNewTab(file);
+		downloadRequest.send();
+	}
 
-		{% block content %}
+	function openInNewTab(url) {
+	  	var win = window.open(url, '_blank');
+	  	win.focus();
+	}
+{% endblock %}
 
-		<div class="row mb-5">
-		  <div class="col-sm-12" style='height:120px;'>
+{% block css %}
+	.item{
+	  	background-color: #fff;
+	}
+	.navbar{
+	  	background-color:  #007cc4;
+	}
+	.navbar-brand{
+	  	color: #fff;
+	  	font-size: 3em;
+	  	font-family: 'Amatic SC', cursive;
+	  	letter-spacing: 3px;
+	  	text-align: left;
+	}
+	.navbar-brand:hover{
+	  	color: #fff;
+	}
+	.bottomnav{
+		position: fixed;
+		bottom: 0;
+		height:50px;
+		background-color: #fff;
+		border-top: 1px solid #ddd;
+	}
+	.bottomnavtext{
+		font-size: .7em;
+	}
+	.navactive{
+		color : #007cc4;
+	}
+	.bookshelfhead{
+		font-size: 1.8em;
+		font-weight: bold;
+		color: #555;
+	}
+	.headhr{
+		border: none;
+		background: #999;
+		height: 1px;
+		padding:0;
+		margin:0;
+	}
+	.booktab{
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		margin: 0 0px 0 0;
+	}
+	.booktitle{
+		font-size: 0.9em;
+		margin : 0;
+		margin-bottom: 5px;
+	}
+	.bookauthor{
+		font-size: 0.8em;
+		margin: 0;
+		margin-bottom: 10px;
+	}
+	.currbookbuttondelete{
+		border: 1px solid red;
+		color: red;
+		background-color: #ececec;
+		font-size: .8em;
+		padding : 3px 5px;
+	}
+	.currbookbuttondelete:hover{
+		background-color: red;
+		color:#ececec;
+	}
+	.bookbuttondelete{
+		border: 1px solid red;
+		color: red;
+		background-color: #fff;
+		font-size: .8em;
+		padding : 3px 5px;
+	}
+	.bookbuttondelete:hover{
+		background-color: red;
+		color:#fff;
+	}
+	.currbookbutton{
+		border: 1px solid #264348;
+		color: #264348;
+		background-color: #ececec;
+		font-size: .8em;
+		padding : 3px 5px;
+	}
+	.currbookbutton:hover{
+		background-color: #264348;
+		color:#ececec;
+	}
+	.bookbutton{
+		border: 1px solid #264348;
+		color: #264348;
+		background-color: #fff;
+		font-size: .8em;
+		padding : 3px 5px;
+	}
+	.bookbutton:hover{
+		background-color: #264348;
+		color:#fff;
+	}
+	.nobook{
+	  	box-shadow: 0 0 5px 2px #aaa;
+	}
+	.nobookcontent{
+	  	font-size: 1.5em;
+	  	color: #555;
+	}
+	.nobookcontent2{
+	  	font-size: 1.2em;
+	  	color: #555;
+	}
+	.nobooklink{
+	  	color:blue;
+	}
+	.nobooklink:hover{
+	  	text-decoration: none;
+	}
+	#popupok{
+		display:none;
+		position: fixed;
+		right: 50px;
+		top:100px;
+		border-radius: 1px;
+		border: 1px solid #eee;
+		box-shadow: 0 0 5px 2px #555;
+		height:85px;
+		width: 240px;
+		padding: 30px;
+		background-color: #fff;
+		color:black;
+		z-index: 3;
+	}
+	#popuperr{
+		display:none;
+		position: fixed;
+		right: 50px;
+		top:100px;
+		border-radius: 2px;
+		border: 1px solid #eee;
+		box-shadow: 0 0 5px 2px #ccc;
+		height:85px;
+		width: 300px;
+		padding: 30px;
+		background-color: #fff;
+		color:black;
+		z-index: 3;
+	}
+	.showpopup{
+		display: block;
+		z-index: 10;
+	}
+{% endblock %}
 
-		  </div>
-		  <div class="col-md-1"></div>
-		  <div class="col-md-10">
-			  {% if currentbook %}
-			  <div class="row px-2 py-5" style="background-color:#343a40;border-radius:4px;color:#fff; width:70vw;margin:auto;" id='{{ currentbook.book.isbn }}'>
-				<div class="col-sm-12">
-					<div class="row">
-						<div class="col-sm-12">
-							<p style="font-size:1.9em;color:#fff;margin:2vw;margin-left:8vw;font-weight:400;margin-top:0;">Continue Reading...</p>
-						</div>
-					</div>
-				  <div class="row">
-					<div class="col-sm-2"></div>
-					<div class="col-sm-2">
-					  {% if currentbook.book.cover %}
-					  <img src="{{ currentbook.book.cover.url }}" alt="" height="176" width="133">
-					  {% else %}
-					  <img src="{% static 'books/nocover.jpeg' %}" alt="" height="176" width="133" class="img-responsive">
-					  {% endif %}
-					</div>
-					<div class="col-sm-6">
-					  <div class="row">
-						  <div class="col-sm-12 my-3" style="cursor: pointer" onclick="location.href='{% url 'books:bookview' %}?isbn={{currentbook.book.isbn}}'">
-							  <p style="font-size:1.4em;color:#fff;">{{currentbook.book.title}}</p>
-						  </div>
-							<div class="col-sm-12 my-3" style="margin-top:0;">
-							  <p style="font-size:1em;color:#fff;margin-top:0;"><em>By {{currentbook.book.author}}</em></p>
-						  </div>
-						  <div class="col-sm-12">
-							  <p style="font-size:.87em;color:#fff;">Completed {{percent|floatformat:0}}%</p>
-						  </div>
-						  <div class="col-sm-12 px-3">
-							  <div class="progress" style="height: 2px; background-color:#eee;">
-								<div class="progress-bar" role="progressbar" style="width: {{percent}}%; background-color:#22e590;!important" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-							  </div>
-						  </div>
-					  </div>
-					</div>
-					<div class="col-sm-2">
-						<div class="row my-3">
-							<div class="col-sm-12" style="cursor:pointer;">
-								<img src="{% static 'images/read2.png' %}" height="32px" width="32px" onclick="openInNewTab('{% url 'books:pdfviewer' %}?isbn={{currentbook.book.isbn}}')">
+{% block content %}
+	<div class="row mb-5">
+	  	<div class="col-sm-12" style='height:120px;'></div>
+	  	<div class="col-md-1"></div>
+	  	<div class="col-md-10">
+		  	{% if currentbook %}
+		  		<div class="row px-2 py-5" style="background-color:#343a40;border-radius:4px;color:#fff; width:70vw;margin:auto;" id='{{ currentbook.book.isbn }}'>
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-12">
+								<p style="font-size:1.9em;color:#fff;margin:2vw;margin-left:8vw;font-weight:400;margin-top:0;">Continue Reading...</p>
 							</div>
 						</div>
-						<div class="row my-3">
-							<div class="col-sm-12" style="cursor:pointer;">
-								<img src="{% static 'images/download2.png' %}" onclick="downloaded({{currentbook.book.isbn}},'{{currentbook.book.file.url}}')">
+			  			<div class="row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-2">
+							  	{% if currentbook.book.cover %}
+							  		<img src="{{ currentbook.book.cover.url }}" alt="" height="176" width="133">
+							  	{% else %}
+							  		<img src="{% static 'books/nocover.jpeg' %}" alt="" height="176" width="133" class="img-responsive">
+							  	{% endif %}
 							</div>
-						</div>
-						<div class="row my-3">
-							<div class="col-sm-12" style="cursor:pointer;">
-								<img src="{% static 'images/delete2.png' %}" height='32px' width='32px' onclick="deletebook({{currentbook.book.isbn}})">
+							<div class="col-sm-6">
+							  	<div class="row">
+								  	<div class="col-sm-12 my-3" style="cursor: pointer" onclick="location.href='{% url 'books:bookview' %}?isbn={{currentbook.book.isbn}}'">
+									  	<p style="font-size:1.4em;color:#fff;">{{currentbook.book.title}}</p>
+								  	</div>
+									<div class="col-sm-12 my-3" style="margin-top:0;">
+									  	<p style="font-size:1em;color:#fff;margin-top:0;"><em>By {{currentbook.book.author}}</em></p>
+								  	</div>
+								  	<div class="col-sm-12">
+									  	<p style="font-size:.87em;color:#fff;">Completed {{percent|floatformat:0}}%</p>
+								  	</div>
+								  	<div class="col-sm-12 px-3">
+									  	<div class="progress" style="height: 2px; background-color:#eee;">
+											<div class="progress-bar" role="progressbar" style="width: {{percent}}%; background-color:#22e590;!important" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									  	</div>
+								  	</div>
+							  	</div>
 							</div>
-						</div>
+							<div class="col-sm-2">
+								<div class="row my-3">
+									<div class="col-sm-12" style="cursor:pointer;">
+										<img src="{% static 'images/read2.png' %}" height="32px" width="32px" onclick="openInNewTab('{% url 'books:pdfviewer' %}?isbn={{currentbook.book.isbn}}')">
+									</div>
+								</div>
+								<div class="row my-3">
+									<div class="col-sm-12" style="cursor:pointer;">
+										<img src="{% static 'images/download2.png' %}" onclick="downloaded({{currentbook.book.isbn}},'{{currentbook.book.file.url}}')">
+									</div>
+								</div>
+								<div class="row my-3">
+									<div class="col-sm-12" style="cursor:pointer;">
+										<img src="{% static 'images/delete2.png' %}" height='32px' width='32px' onclick="deletebook({{currentbook.book.isbn}})">
+									</div>
+								</div>
+							</div>
+			  			</div>
 					</div>
-				  </div>
-				</div>
-			  </div>
-			  {% endif %}
-			  <div class="products">
-	  			<div class="container">
+		  		</div>
+		  	{% endif %}
 
-
-	  				<div class="row products_row">
-
-	  					{% if not books %}
-	  	                  <div class="col-sm-12 text-center mt-5">
-	  	                    <p class="nobooks">Sorry!!!  No Books</p>
-	  	                  </div>
-	  	                {% else %}
-
-	  					{% for book in books %}
-	  					<!-- Product -->
-						{% if book.iscurrentbook %}
-						{% else %}
-	  					<div class="col-xl-2 col-md-2 col-xs-6 col-sm-6" id='{{ book.book.isbn }}'>
-	  						<div class="product">
-	  							<div class="product_image">
-	  								{% if book.book.cover %}
-	  								<img src="{{book.book.cover.url}}" alt="" height="240vh" width="530">
-	  								{% else %}
-	  								<img src="{% static 'books/nocover.jpeg' %}" alt="" height="240vh" width="530">
-	  								{% endif %}
-	  							</div>
-	  							<div class="product_content ">
-	  								<div class="product_info d-flex flex-row align-items-start justify-content-start px-0">
-	  									<div>
-	  										<div>
-	  											<div class="product_name"><a style="font-size:1.1em;" href="{% url 'books:bookview' %}?isbn={{book.book.isbn}}">{{book.book.title}}</a></div>
-	  											<div class="product_category">By {{book.book.author}}</div>
-	  											<div class="product_category">{{book.book.views}} views</div>
-	  										</div>
-	  									</div>
-
-	  								</div>
-	  								<div class="product_buttons" style="height:30px;">
-	  									<div class="text-right d-flex flex-row align-items-start justify-content-start">
-	  										<!-- <div {% if auth %}
-	  										onclick="deletebook({{book.book.isbn}})"
-	  										{% else %}
-	  										onclick="location.href='{% url 'account:login' %}'"
-	  										{% endif %}
-	  										class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
-	  											<div><div><img src="{% static 'images/delete.png' %}" class="svg" alt=""></div></div> -->
-													<div
-		  										onclick="openInNewTab('{% url 'books:pdfviewer' %}?isbn={{book.book.isbn}}')"
-		  										class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
-		  											<div><div style="margin-top:15px;"><img height="20px" width="20px" src="{% static 'images/read1.png' %}" class="svg" alt=""></div></div>
-	  										</div>
-	  										<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
-	  											<div><div style="margin-top:15px;"> <a {% if auth %}
-	  															onclick="downloaded({{book.book.isbn}},'{{book.book.file.url}}')"
-	  														  {% else %}
-	  															href="{% url 'account:login' %}"
-	  														  {% endif %}><img src="{% static 'images/download.svg' %}" class="svg" alt=""></a></div></div>
-	  										</div>
-	  									</div>
-	  								</div>
-	  							</div>
-	  						</div>
-	  					</div>
+		  	<div class="products">
+				<div class="container">
+					<div class="row products_row">
+						{% if not books %}
+		                  	<div class="col-sm-12 text-center mt-5">
+		                    	<p class="nobooks">Sorry!!!  No Books</p>
+		                  	</div>
+		                {% else %}
+							{% for book in books %}
+								{% if book.iscurrentbook %}
+								{% else %}
+									<div class="col-xl-2 col-md-2 col-xs-6 col-sm-6" id='{{ book.book.isbn }}'>
+										<div class="product">
+											<div class="product_image">
+												{% if book.book.cover %}
+													<img src="{{book.book.cover.url}}" alt="" height="240vh" width="530">
+												{% else %}
+													<img src="{% static 'books/nocover.jpeg' %}" alt="" height="240vh" width="530">
+												{% endif %}
+											</div>
+											<div class="product_content ">
+												<div class="product_info d-flex flex-row align-items-start justify-content-start px-0">
+													<div>
+														<div>
+															<div class="product_name"><a style="font-size:1.1em;" href="{% url 'books:bookview' %}?isbn={{book.book.isbn}}">{{book.book.title}}</a></div>
+															<div class="product_category">By {{book.book.author}}</div>
+															<div class="product_category">{{book.book.views}} views</div>
+														</div>
+													</div>
+												</div>
+												<div class="product_buttons" style="height:30px;">
+													<div class="text-right d-flex flex-row align-items-start justify-content-start">
+														<div onclick="openInNewTab('{% url 'books:pdfviewer' %}?isbn={{book.book.isbn}}')"
+				  											class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+				  											<div>
+																<div style="margin-top:15px;">
+																	<img height="20px" width="20px" src="{% static 'images/read1.png' %}" class="svg" alt="">
+																</div>
+															</div>
+														</div>
+														<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+															<div>
+																<div style="margin-top:15px;">
+																	<a	{% if auth %}
+																			onclick="downloaded({{book.book.isbn}},'{{book.book.file.url}}')"
+																	  	{% else %}
+																			href="{% url 'account:login' %}"
+																	  	{% endif %}><img src="{% static 'images/download.svg' %}" class="svg" alt=""></a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							{% endfor %}
 						{% endif %}
-	  					{% endfor %}
-	  					{% endif %}
-	  				</div>
-	  			</div>
-	  		</div>
-		  </div>
-		  <!-- <div class="col-md-1"></div> -->
-		</div>
-
-		{% endblock %}
+					</div>
+				</div>
+			</div>
+	  	</div>
+	</div>
+{% endblock %}

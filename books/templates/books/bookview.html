@@ -2,606 +2,592 @@
 {% load static %}
 
 {% block exlinks %}
-<link rel="stylesheet" type="text/css" href="{% static 'plugins/flexslider/flexslider.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'styles/product.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/flexslider/flexslider.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/product.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
 {% endblock %}
 
 {% block js %}
+    var popupInterval;
+    var id;
 
-window.onload = function(){
-    var txtarea = document.getElementById('fordescription');
-    console.log(txtarea)
-    txtarea.style.height = txtarea.scrollHeight + "px";
-};
+    window.onload = function(){
+        var txtarea = document.getElementById('fordescription');
+        console.log(txtarea)
+        txtarea.style.height = txtarea.scrollHeight + "px";
+    };
 
-var url = '{% url "books:addtoshelf" %}?isbn={{book.isbn}}';
-var response;
-var request = new XMLHttpRequest()
-var popupInterval;
-var id;
-function clearpopup(){
-  clearInterval(popupInterval);
-  $(id).fadeOut();
-}
-
-function openInNewTab(url) {
-	var win = window.open(url, '_blank');
-	win.focus();
-}
-
-request.onload = function(){
-    response = JSON.parse(request.response);
-    if( response['status'] == 'ok'){
-        id = '#popupok'
+    function clearpopup(){
+        clearInterval(popupInterval);
+        $(id).fadeOut();
     }
-    if( response['status'] == 'err'){
-        id = '#popuperr'
+
+    function openInNewTab(url) {
+    	var win = window.open(url, '_blank');
+    	win.focus();
     }
-    if( response['status'] == 'pre'){
-        id = '#popuppre'
+
+    var url = '{% url "books:addtoshelf" %}?isbn={{book.isbn}}';
+    var response;
+    var request = new XMLHttpRequest()
+
+    request.onload = function(){
+        response = JSON.parse(request.response);
+        if( response['status'] == 'ok'){
+            id = '#popupok'
+        }
+        if( response['status'] == 'err'){
+            id = '#popuperr'
+        }
+        if( response['status'] == 'pre'){
+            id = '#popuppre'
+        }
+        popupInterval = setInterval(clearpopup,3000);
+        $(id).fadeIn();
     }
-    popupInterval = setInterval(clearpopup,3000);
-    $(id).fadeIn();
-}
-function addtoshelf(){
-    request.open('GET',url,true);
-    request.send()
-}
-function downloaded(isbn,file){
-  var downloadurl = '{% url 'books:downloaded' %}?isbn='+isbn;
-  var downloadRequest = new XMLHttpRequest();
-  downloadRequest.open('GET',downloadurl,true);
-  downloadRequest.onload=openInNewTab(file);
-  downloadRequest.send();
-}
 
-function ratebook(isbn){
-    document.getElementById('ratingbutton').disabled=true;
-    var select = document.getElementById('ratingbox');
-    value = select.options[select.selectedIndex].value;
-    var ratingurl = '{% url 'books:setrating' %}?isbn='+isbn+'&rating='+value;
-    console.log(ratingurl);
-    location.href=ratingurl;
-}
+    function addtoshelf(){
+        request.open('GET',url,true);
+        request.send()
+    }
 
-function postcomment(isbn){
-    document.getElementById('postcomment').disabled=true;
-    var text = document.getElementById('comment').value;
-    var commenturl = '{% url 'books:newcomment' %}?isbn='+isbn+'&text='+text;
-    location.href = commenturl;
-}
+    function downloaded(isbn,file){
+        var downloadurl = '{% url 'books:downloaded' %}?isbn='+isbn;
+        var downloadRequest = new XMLHttpRequest();
+        downloadRequest.open('GET',downloadurl,true);
+        downloadRequest.onload=openInNewTab(file);
+        downloadRequest.send();
+    }
 
-function deletecomment(commentid){
-  document.getElementById('deletecomment_'+commentid).disabled=true;
-  var commenturl = '{% url 'books:deletecomment' %}?commentid='+commentid;
-  location.href = commenturl;
-}
+    function ratebook(isbn){
+        document.getElementById('ratingbutton').disabled=true;
+        var select = document.getElementById('ratingbox');
+        value = select.options[select.selectedIndex].value;
+        var ratingurl = '{% url 'books:setrating' %}?isbn='+isbn+'&rating='+value;
+        console.log(ratingurl);
+        location.href=ratingurl;
+    }
 
-function postreply(id){
-  document.getElementById('reply_'+id).disabled=true;
-  var text = document.getElementById('replytext_'+id).value;
-  var replyurl = '{% url 'books:newreply' %}?id='+id+'&text='+text;
-  location.href = replyurl;
-}
+    function postcomment(isbn){
+        document.getElementById('postcomment').disabled=true;
+        var text = document.getElementById('comment').value;
+        var commenturl = '{% url 'books:newcomment' %}?isbn='+isbn+'&text='+text;
+        location.href = commenturl;
+    }
 
-function deletereply(replyid){
-  document.getElementById('deletereply_'+replyid).disabled=true;
-  var replyurl = '{% url 'books:deletereply' %}?replyid='+replyid;
-  location.href = replyurl;
-}
+    function deletecomment(commentid){
+        document.getElementById('deletecomment_'+commentid).disabled=true;
+        var commenturl = '{% url 'books:deletecomment' %}?commentid='+commentid;
+        location.href = commenturl;
+    }
 
-function showreply(id){
-  console.log($('.shownreply').attr('id'));
-  if($('.shownreply').attr('id') == id){
-    $('.reply').removeClass('shownreply');
-    $('#'+id).hide();
-  }
-  else{
-    $('.reply').removeClass('shownreply');
-    $('.reply').hide();
-    $('#'+id).show().addClass('shownreply');
-  }
-}
+    function postreply(id){
+        document.getElementById('reply_'+id).disabled=true;
+        var text = document.getElementById('replytext_'+id).value;
+        var replyurl = '{% url 'books:newreply' %}?id='+id+'&text='+text;
+        location.href = replyurl;
+    }
 
+    function deletereply(replyid){
+        document.getElementById('deletereply_'+replyid).disabled=true;
+        var replyurl = '{% url 'books:deletereply' %}?replyid='+replyid;
+        location.href = replyurl;
+    }
+
+    function showreply(id){
+        console.log($('.shownreply').attr('id'));
+        if($('.shownreply').attr('id') == id){
+            $('.reply').removeClass('shownreply');
+            $('#'+id).hide();
+        }
+        else{
+            $('.reply').removeClass('shownreply');
+            $('.reply').hide();
+            $('#'+id).show().addClass('shownreply');
+        }
+    }
 {% endblock %}
 
 {% block css %}
-
-#popupok{
-    display:none;
-    position: fixed;
-    right: 50px;
-    top:100px;
-    border-radius: 2px;
-    border: 1px solid #aaa;
-    box-shadow: 0 0 5px 2px #aaa;
-    height:85px;
-    width: 240px;
-    padding: 30px;
-    background-color: #fff;
-    color:black;
-    z-index:500;
-}
-#popuppre{
-    display:none;
-    position: fixed;
-    right: 50px;
-    top:100px;
-    border-radius: 2px;
-    border: 1px solid #aaa;
-    box-shadow: 0 0 6px 2px #aaa;
-    height:85px;
-    width: 300px;
-    padding: 30px;
-    background-color: #fff;
-    color:black;
-    z-index:500;
-}
-#popuperr{
-    display:none;
-    position: fixed;
-    right: 50px;
-    top:100px;
-    border-radius: 2px;
-    border: 1px solid #aaa;
-    box-shadow: 0 0 5px 2px #aaa;
-    height:85px;
-    width: 300px;
-    padding: 30px;
-    background-color: #fff;
-    color:black;
-    z-index:500;
-}
-.icon{
-  font-size:1.6em;
-}
-.showpopup{
-    display: block;
-    z-index: 150;
-}
-.ratingmenu:hover{
-    background-color: #fff;
-}
-.booktitle{
-    font-size: 0.9em;
-    color: #444;
-    font-weight:550;
-    margin : 0;
-    margin-bottom: 5px;
-}
-.bookauthor{
-    font-size: 0.8em;
-    color: #555;
-    font-weight:450;
-    margin: 0;
-    margin-bottom: 10px;
-}
-.booktab:hover{
-    background-color:#eee;
-}
-body{
-  color:black;
-}
-
+    #popupok{
+        display:none;
+        position: fixed;
+        right: 50px;
+        top:100px;
+        border-radius: 2px;
+        border: 1px solid #aaa;
+        box-shadow: 0 0 5px 2px #aaa;
+        height:85px;
+        width: 240px;
+        padding: 30px;
+        background-color: #fff;
+        color:black;
+        z-index:500;
+    }
+    #popuppre{
+        display:none;
+        position: fixed;
+        right: 50px;
+        top:100px;
+        border-radius: 2px;
+        border: 1px solid #aaa;
+        box-shadow: 0 0 6px 2px #aaa;
+        height:85px;
+        width: 300px;
+        padding: 30px;
+        background-color: #fff;
+        color:black;
+        z-index:500;
+    }
+    #popuperr{
+        display:none;
+        position: fixed;
+        right: 50px;
+        top:100px;
+        border-radius: 2px;
+        border: 1px solid #aaa;
+        box-shadow: 0 0 5px 2px #aaa;
+        height:85px;
+        width: 300px;
+        padding: 30px;
+        background-color: #fff;
+        color:black;
+        z-index:500;
+    }
+    .icon{
+        font-size:1.6em;
+    }
+    .showpopup{
+        display: block;
+        z-index: 150;
+    }
+    .ratingmenu:hover{
+        background-color: #fff;
+    }
+    .booktitle{
+        font-size: 0.9em;
+        color: #444;
+        font-weight:550;
+        margin : 0;
+        margin-bottom: 5px;
+    }
+    .bookauthor{
+        font-size: 0.8em;
+        color: #555;
+        font-weight:450;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+    .booktab:hover{
+        background-color:#eee;
+    }
+    body{
+        color:black;
+    }
 {% endblock %}
 
 {% block extra %}
-<div id="popupok">
-    <div class="row">
-      <div class="col-sm-2">
-        <i class="material-icons icon">library_add</i>
-      </div>
-      <div class="col-sm-10 text-center">
-        Book Added
-      </div>
+    <div id="popupok">
+        <div class="row">
+            <div class="col-sm-2">
+                <i class="material-icons icon">library_add</i>
+            </div>
+            <div class="col-sm-10 text-center">
+                Book Added
+            </div>
+        </div>
     </div>
-</div>
-<div id="popuperr">
-    <div class="row">
-      <div class="col-sm-2">
-        <i class="material-icons icon">block</i>
-      </div>
-      <div class="col-sm-10 text-center">
-        Some Error Occured
-      </div>
+
+    <div id="popuperr">
+        <div class="row">
+            <div class="col-sm-2">
+                <i class="material-icons icon">block</i>
+            </div>
+            <div class="col-sm-10 text-center">
+                Some Error Occured
+            </div>
+        </div>
     </div>
-</div>
-<div id="popuppre">
-    <div class="row">
-      <div class="col-sm-2">
-        <i class="material-icons icon">report</i>
-      </div>
-      <div class="col-sm-10 text-center">
-        Book Already Added
-      </div>
+    <div id="popuppre">
+        <div class="row">
+            <div class="col-sm-2">
+                <i class="material-icons icon">report</i>
+            </div>
+            <div class="col-sm-10 text-center">
+                Book Already Added
+            </div>
+        </div>
     </div>
-</div>
 {% endblock %}
 
 {% block content %}
+    <div class="col-sm-12" style='height:100px;'></div>
+    <div class="super_container_inner">
+        <div class="super_overlay"></div>
 
-
-<div class="col-sm-12" style='height:100px;'></div>
-
-<div class="super_container_inner">
-    <div class="super_overlay"></div>
-
-    <!-- Product -->
-
-    <div class="product">
-        <div class="container">
-            <div class="row">
-
-                <!-- Product Image -->
-                <div class="col-lg-4">
-                    <div class="product_image_slider_container">
-                        <div id="slider" class="flexslider">
-                            <img height="320px" width="240px" style="display:block;margin:auto;" src="{% if book.cover %}
-                                      {{book.cover.url}}
-                                      {% else %}
-                                      {% static 'books/nocover.jpeg' %}
-                                      {% endif %}" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Info -->
-                <div class="col-lg-8 product_col">
-                    <div class="product_info">
-                        <div class="col-sm-12">
-                            <div class="row text-center">
-                                {% if request.user.is_authenticated %}
-                                {% else %}
-                                <p class="text-center mb-2 ml-3" style="font-weight:400;" >You must be be loged in to access full features</p>
-                                {% endif %}
+        <!-- Product -->
+        <div class="product">
+            <div class="container">
+                <div class="row">
+                    <!-- Product Image -->
+                    <div class="col-lg-4">
+                        <div class="product_image_slider_container">
+                            <div id="slider" class="flexslider">
+                                <img height="320px" width="240px" style="display:block;margin:auto;" src="
+                                    {% if book.cover %}
+                                        {{book.cover.url}}
+                                    {% else %}
+                                        {% static 'books/nocover.jpeg' %}
+                                    {% endif %}" />
                             </div>
                         </div>
-                        <div class="col-sm-12">
+                    </div>
 
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="product_name">{{book.title|title}}</div>
-                                    <div class="product_category" style="color:#777;">By {{book.author}}</div>
-                                </div>
-                                <div class="col-sm-6">
-                                    {% if barcode.image %}
-                                        <img src="{{ barcode.image.url }}" style="width:100%;height:auto;">
-
+                    <!-- Product Info -->
+                    <div class="col-lg-8 product_col">
+                        <div class="product_info">
+                            <div class="col-sm-12">
+                                <div class="row text-center">
+                                    {% if request.user.is_authenticated %}
+                                    {% else %}
+                                        <p class="text-center mb-2 ml-3" style="font-weight:400;" >You must be be loged in to access full features</p>
                                     {% endif %}
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="product_text" style="color:#777;">{{book.views}} views</div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="product_text" style="color:#777;">
-                                                                                    {%ifequal ratingnumber 0 %}
-                                                                                    Rating : No rating yet
-                                                                                    {%else%}
-                                                                                    Ratings : {{book.totalrating}} ({{ratingnumber}} votes)
-                                                                                    {%endifequal%}
-                                                                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="product_text" style="color:#777;">ISBN :{{book.isbn}}</div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="product_text" style="color:#777;">Series :{{book.series}}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="product_text" style="color:#777;">Genre :
-                                        {% for genre in book.genre.all %}
-                                         <span> {{genre}} </span>,
-                                        {% endfor %}
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="product_name">{{book.title|title}}</div>
+                                        <div class="product_category" style="color:#777;">By {{book.author}}</div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {% if barcode.image %}
+                                            <img src="{{ barcode.image.url }}" style="width:100%;height:auto;">
+                                        {% endif %}
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="product_text" style="color:#777;">Language : {{book.language}}</div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="product_text" style="color:#777;">{{book.views}} views</div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="product_text" style="color:#777;">
+                                            {%ifequal ratingnumber 0 %}
+                                                Rating : No rating yet
+                                            {%else%}
+                                                Ratings : {{book.totalrating}} ({{ratingnumber}} votes)
+                                            {%endifequal%}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-
-
-                        <div class="product_buttons">
-                            <div class="text-right d-flex flex-row align-items-start justify-content-start">
-                                <div {% if auth %}
-                                onclick="addtoshelf('{% url "books:addtoshelf" %}?isbn={{book.isbn}}');"
-                                {% else %}
-                                onclick="location.href='{% url 'account:login' %}?next={{request.get_full_path}}'"
-                                {% endif %} class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
-                                    <div><div><img src="{% static 'images/heart_2.svg' %}" class="svg" alt=""><div>+</div></div></div>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="product_text" style="color:#777;">ISBN :{{book.isbn}}</div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="product_text" style="color:#777;">Series :{{book.series}}</div>
+                                    </div>
                                 </div>
-                                <div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
-                                    <div><div> <a {% if auth %}
-                                                    onclick="downloaded({{book.isbn}},'{{book.file.url}}')"
-                                                  {% else %}
-                                                    href="{% url 'account:login' %}?next={{request.get_full_path}}"
-                                                  {% endif %}><img src="{% static 'images/download.svg' %}" class="svg" alt=""></a></div></div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="product_text" style="color:#777;">Genre :
+                                            {% for genre in book.genre.all %}
+                                                <span> {{genre}} </span>,
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="product_text" style="color:#777;">Language : {{book.language}}</div>
+                                    </div>
                                 </div>
-                                <!-- <div class=" product_cart text-center d-flex flex-column align-items-center justify-content-center" style="background-color:#fff;">
-                                    <div class="row pt-2">
-                                        <div class="col-sm-12">
-                                            <div class="row">
-                                                <div class="col-sm-4 text-right">
-                                                    <p style="color:#000;font-size:1em;font-weight:500;">Rate This Book : </p>
-                                                </div>
-                                                <div class="col-sm-3 p-0">
-                                                    <select class="form-control" name="">
-                                                        <option value="">1</option>
-                                                        <option value="">2</option>
-                                                        <option value="">3</option>
-                                                        <option value="">4</option>
-                                                        <option value="">5</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <button type="button" class="btn btn-primary" name="button">Rate</button>
-                                                </div>
+                            </div>
+
+                            <div class="product_buttons">
+                                <div class="text-right d-flex flex-row align-items-start justify-content-start">
+                                    <div
+                                        {% if auth %}
+                                            onclick="addtoshelf('{% url "books:addtoshelf" %}?isbn={{book.isbn}}');"
+                                        {% else %}
+                                            onclick="location.href='{% url 'account:login' %}?next={{request.get_full_path}}'"
+                                        {% endif %}
+                                        class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+                                        <div>
+                                            <div>
+                                                <img src="{% static 'images/heart_2.svg' %}" class="svg" alt="">
+                                                <div>+</div>
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
-
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <div class="col-sm-12 pt-3 ml-5" style="overflow-y:visible;">
-                    <div class="product_text" style="color:#333;font-size:1.6em;">Description</div>
-                    <div class="product_text ml-4" style="overflow-y:visible;">
-                      <textarea id="fordescription" disabled name="name" style="overflow-y:visible; width:100%; background-color:#fff; color:#555; font-size:1.3em; resize:none; border:none;">{{book.description}}</textarea>
-                    </div>
-                </div>
-                {% if morefromauthor %}
-                <div class="col-sm-12 mt-5">
-                    <div class="row">
-                        <div class="col-sm-12 text-left">
-                            <p style="color:#333;font-size:1.8em;font-weight:500;">More books from author {{book.author}}</p>
-                        </div>
-                        <div class="col-sm-12 mt-3">
-                            <div class="row">
-
-                                {% for book1 in morefromauthor %}
-                                <div class="col-sm-4 col-md-4 item mt-3 book" id='{{ book1.isbn }}' onclick="location.href='{% url 'books:bookview' %}?isbn={{book1.isbn}}'" style="cursor: pointer">
-                                   <div class="row booktab">
-                                       <div class="col-md-6 col-sm-12">
-                                           {% if book1.cover %}
-                                           <img src="{{ book1.cover.url }}" alt="" height="176" width="133">
-                                           {% else %}
-                                           <img src="{% static 'books/nocover.jpeg' %}" alt="" height="176" width="133" class="img-responsive">
-                                           {% endif %}
-                                       </div>
-                                       <div class="col-md-6 col-sm-12">
-                                           <p class="booktitle mt-1">{{book1.title|title}}</p>
-                                           <p class="bookauthor"><em>{{book1.author}}</em></p>
-                                           <p class="bookauthor">Rating: {{book1.totalrating}}</p>
-                                           <p class="bookauthor">Views: {{book1.views}}</p>
-                                       </div>
-                                   </div>
-                                </div>
-                                {% endfor %}
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="col-sm-12 mt-5">
-                    <div class="row">
-                        <div class="col-sm-12 text-left">
-                            <p style="color:#333;font-size:1.8em;font-weight:500;">What people think about this book</p>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="row mb-5">
-                                        <div class="col-sm-12 text-center pt-5" style="color:#666;font-size:1.8em;">
-                                            {%ifequal ratingnumber 0 %}
-                                            No ratings yet
-                                            {%else%}
-                                            Rating : {{book.totalrating}}
-                                            {%endifequal%}
-                                        </div>
-                                        <div class="col-sm-12 mt-3 text-center" style="font-size:1.3em">
-                                            {%ifequal ratingnumber 0 %}
-                                            {%else%}
-                                            <p>Based on {{ratingnumber}} user ratings</p>
-                                            {%endifequal%}
-                                        </div>
-                                        <div class="col-sm-12 mt-2 text-center" style="font-size:1.3em;">
-                                            {% if userRated %}
-                                            Your rating on this book is {{userrating}}
-                                            {% endif %}
+                                    <div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+                                        <div>
+                                            <div>
+                                                <a
+                                                    {% if auth %}
+                                                        onclick="downloaded({{book.isbn}},'{{book.file.url}}')"
+                                                    {% else %}
+                                                        href="{% url 'account:login' %}?next={{request.get_full_path}}"
+                                                    {% endif %}>
+                                                        <img src="{% static 'images/download.svg' %}" class="svg" alt="">
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                {% if userRated %}
-                                {% else %}
-                                  {% if auth %}
-                                  <div class="col-sm-6" style="border:1px solid #eee; background-color:#eeeeee;">
-                                      <div class="notRated">
-                                          <p class="mt-5" style="color:#555;font-size: 1.5em;font-weight:400;">Give a rating on this book to help others</p>
-                                          <div class="row mt-4 mb-5">
-                                              <div class="col-sm-4 text-right">
-                                                  <p style="color:#000;font-size:1em;font-weight:500;">Rate This Book : </p>
-                                              </div>
-                                              <div class="col-sm-3 p-0">
-                                                  <select id="ratingbox" class="form-control" name="">
-                                                      <option value="1">1</option>
-                                                      <option value="2">2</option>
-                                                      <option value="3">3</option>
-                                                      <option value="4">4</option>
-                                                      <option value="5">5</option>
-                                                  </select>
-                                              </div>
-                                              <div class="col-sm-3">
-                                                  <button type="button" id="ratingbutton" class="btn btn-primary" onclick="ratebook('{{book.isbn}}')" name="button">Rate</button>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="rated text-center" style="display:none;">
-                                          <p style="font-weight:400;font-size:1.4em;color:#444;padding-top:7vh;">Thank you for your feedback :)</p>
-                                      </div>
-                                  </div>
-                                  {% endif %}
-                                {% endif %}
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="row ml-5">
-                                <div class="col-sm-12 mb-4 text-left">
-                                    <p style="color:#333;font-size:1.5em;font-weight:400;" >User Comments : </p>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="row">       <!-- comments row -->
-                                        {% if comments %}
-                                        {% for comment in comments %}
-                                        <div class="col-sm-12 mb-5">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="row">
-                                                        <div class="col-sm-1 pt-2">
-                                                          <img id='userpic' height='26px' width="26px" class="imgcircle float-right" src="{% if request.user.is_authenticated %}
-                                                                                      {% if request.user.userpic %}
-                                                                                        {{user.userpic.url}}
-                                                                                      {% else %}
-                                                                                        {% static 'images/user.svg' %}
-                                                                                      {% endif %}
-                                                                                      {% else %}
-                                                                                        {% static 'images/user.svg' %}
-                                                                                      {% endif %}">
-                                                        </div>
-                                                        <div class="col-sm-11 text-left">
-                                                            <div class="row">
-                                                              <div class="col-sm-12 text-left">
-                                                                {{comment.user.username|title}}
-                                                              </div>
-                                                              <div class="col-sm-12 text-left">
-                                                                {{comment.created_at}}
-                                                              </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12 pl-5 mt-2 pr-1" style="overflow-y:visible;">
-                                                  <textarea disabled name="name" style="background-color: #fff;overflow-y:visible; width:100%; color:#555; font-size:1.3em; resize:none; border:none;" placeholder="Write your comments here.(Max 512 Characters)">{{comment.text}}</textarea>
+                    </div>
 
-                                                </div>
-                                                <div class="col-sm-12 mt-2 ml-5">
-                                                    <div class="row">
-                                                      <div class="col-sm-3">
-                                                          <button class="btn" type="button" id='replybutton_{{comment.id}}' onclick="showreply({{comment.id}});" name="button">Reply</button>
-                                                      </div>
-                                                        {% ifequal request.user comment.user %}
-                                                        <div class="col-sm-3">
-                                                            <button class="btn btn-danger" id="deletecomment_{{comment.id}}" onclick="deletecomment({{comment.id}})" type="button" name="button">Delete Comment</button>
+                    <div class="col-sm-12 pt-3 ml-5" style="overflow-y:visible;">
+                        <div class="product_text" style="color:#333;font-size:1.6em;">Description</div>
+                        <div class="product_text ml-4" style="overflow-y:visible;">
+                            <textarea id="fordescription" disabled name="name" style="overflow-y:visible; width:100%; background-color:#fff; color:#555; font-size:1.3em; resize:none; border:none;">{{book.description}}</textarea>
+                        </div>
+                    </div>
+
+                    {% if morefromauthor %}
+                        <div class="col-sm-12 mt-5">
+                            <div class="row">
+                                <div class="col-sm-12 text-left">
+                                    <p style="color:#333;font-size:1.8em;font-weight:500;">More books from author {{book.author}}</p>
+                                </div>
+                                <div class="col-sm-12 mt-3">
+                                    <div class="row">
+                                        {% for book1 in morefromauthor %}
+                                            <div class="col-sm-4 col-md-4 item mt-3 book" id='{{ book1.isbn }}' onclick="location.href='{% url 'books:bookview' %}?isbn={{book1.isbn}}'" style="cursor: pointer">
+                                               <div class="row booktab">
+                                                   <div class="col-md-6 col-sm-12">
+                                                        {% if book1.cover %}
+                                                            <img src="{{ book1.cover.url }}" alt="" height="176" width="133">
+                                                        {% else %}
+                                                            <img src="{% static 'books/nocover.jpeg' %}" alt="" height="176" width="133" class="img-responsive">
+                                                        {% endif %}
+                                                   </div>
+                                                   <div class="col-md-6 col-sm-12">
+                                                        <p class="booktitle mt-1">{{book1.title|title}}</p>
+                                                        <p class="bookauthor"><em>{{book1.author}}</em></p>
+                                                        <p class="bookauthor">Rating: {{book1.totalrating}}</p>
+                                                        <p class="bookauthor">Views: {{book1.views}}</p>
+                                                   </div>
+                                               </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="col-sm-12 mt-5">
+                        <div class="row">
+                            <div class="col-sm-12 text-left">
+                                <p style="color:#333;font-size:1.8em;font-weight:500;">What people think about this book</p>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row mb-5">
+                                            <div class="col-sm-12 text-center pt-5" style="color:#666;font-size:1.8em;">
+                                                {%ifequal ratingnumber 0 %}
+                                                    No ratings yet
+                                                {%else%}
+                                                    Rating : {{book.totalrating}}
+                                                {%endifequal%}
+                                            </div>
+                                            <div class="col-sm-12 mt-3 text-center" style="font-size:1.3em">
+                                                {%ifequal ratingnumber 0 %}
+                                                {%else%}
+                                                    <p>Based on {{ratingnumber}} user ratings</p>
+                                                {%endifequal%}
+                                            </div>
+                                            <div class="col-sm-12 mt-2 text-center" style="font-size:1.3em;">
+                                                {% if userRated %}
+                                                    Your rating on this book is {{userrating}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% if userRated %}
+                                    {% else %}
+                                        {% if auth %}
+                                            <div class="col-sm-6" style="border:1px solid #eee; background-color:#eeeeee;">
+                                                <div class="notRated">
+                                                    <p class="mt-5" style="color:#555;font-size: 1.5em;font-weight:400;">Give a rating on this book to help others</p>
+                                                    <div class="row mt-4 mb-5">
+                                                        <div class="col-sm-4 text-right">
+                                                            <p style="color:#000;font-size:1em;font-weight:500;">Rate This Book : </p>
                                                         </div>
-                                                        {% endifequal %}
+                                                        <div class="col-sm-3 p-0">
+                                                            <select id="ratingbox" class="form-control" name="">
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <button type="button" id="ratingbutton" class="btn btn-primary" onclick="ratebook('{{book.isbn}}')" name="button">Rate</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div id="{{comment.id}}" style="display:none;background-color:#eeeeee;" class="col--sm-12 ml-5 my-4 py-3 reply">  <!-- start of reply -->
-                                                  <div class="row ml-4">
-                                                    {% if comments %}
-                                                    {% for reply in comment.reply_set.all %}
+                                                <div class="rated text-center" style="display:none;">
+                                                    <p style="font-weight:400;font-size:1.4em;color:#444;padding-top:7vh;">Thank you for your feedback :)</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row ml-5">
+                                    <div class="col-sm-12 mb-4 text-left">
+                                        <p style="color:#333;font-size:1.5em;font-weight:400;" >User Comments : </p>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="row">       <!-- comments row -->
+                                            {% if comments %}
+                                                {% for comment in comments %}
                                                     <div class="col-sm-12 mb-5">
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-sm-1 pt-2">
-                                                                      <img id='userpic' height='26px' width="26px" class="imgcircle float-right" src="{% if request.user.is_authenticated %}
-                                                                                                  {% if request.user.userpic %}
-                                                                                                    {{user.userpic.url}}
-                                                                                                  {% else %}
-                                                                                                    {% static 'images/user.svg' %}
-                                                                                                  {% endif %}
-                                                                                                  {% else %}
-                                                                                                    {% static 'images/user.svg' %}
-                                                                                                  {% endif %}">
+                                                                        <img id='userpic' height='26px' width="26px" class="imgcircle float-right" src="
+                                                                            {% if request.user.is_authenticated %}
+                                                                                {% if request.user.userpic %}
+                                                                                    {{user.userpic.url}}
+                                                                                {% else %}
+                                                                                    {% static 'images/user.svg' %}
+                                                                                {% endif %}
+                                                                            {% else %}
+                                                                                {% static 'images/user.svg' %}
+                                                                            {% endif %}">
                                                                     </div>
                                                                     <div class="col-sm-11 text-left">
                                                                         <div class="row">
-                                                                          <div class="col-sm-12 text-left">
-                                                                            {{reply.user.username|title}}
-                                                                          </div>
-                                                                          <div class="col-sm-12 text-left">
-                                                                            {{reply.created_at}}
-                                                                          </div>
+                                                                            <div class="col-sm-12 text-left">
+                                                                                {{comment.user.username|title}}
+                                                                            </div>
+                                                                            <div class="col-sm-12 text-left">
+                                                                                {{comment.created_at}}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-12 pl-5 mt-2">
-                                                                <textarea disabled name="name" cols="40" style="background-color: #eee;overflow-y:visible; width:100%; height: 100%; color:#555; font-size:1.3em; resize:none; border:none;">{{reply.text}}</textarea>
-                                                                <div class="">
 
-                                                                </div>
+                                                            <div class="col-sm-12 pl-5 mt-2 pr-1" style="overflow-y:visible;">
+                                                                <textarea disabled name="name" style="background-color: #fff;overflow-y:visible; width:100%; color:#555; font-size:1.3em; resize:none; border:none;" placeholder="Write your comments here.(Max 512 Characters)">{{comment.text}}</textarea>
                                                             </div>
+
                                                             <div class="col-sm-12 mt-2 ml-5">
                                                                 <div class="row">
-
-                                                                    {% ifequal request.user reply.user %}
                                                                     <div class="col-sm-3">
-                                                                        <button class="btn btn-danger" id="deletereply_{{reply.id}}" onclick="deletereply({{reply.id}})" type="button" name="button">Delete Reply</button>
+                                                                        <button class="btn" type="button" id='replybutton_{{comment.id}}' onclick="showreply({{comment.id}});" name="button">Reply</button>
                                                                     </div>
+                                                                    {% ifequal request.user comment.user %}
+                                                                        <div class="col-sm-3">
+                                                                            <button class="btn btn-danger" id="deletecomment_{{comment.id}}" onclick="deletecomment({{comment.id}})" type="button" name="button">Delete Comment</button>
+                                                                        </div>
                                                                     {% endifequal %}
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    {% endfor %}
-                                                    {% else %}
-                                                    {% endif %}
-                                                    <div class="col-sm-12">
-                                                        <div class="row">
-                                                            <div class="col-sm-9">
-                                                                <textarea id="replytext_{{comment.id}}" cols="40" rows="10" style="white-space: pre-wrap;" maxlength="512" placeholder="Write your reply here.(max 512 characters)"></textarea>
-                                                                <div class="">
 
+                                                            <div id="{{comment.id}}" style="display:none;background-color:#eeeeee;" class="col--sm-12 ml-5 my-4 py-3 reply">  <!-- start of reply -->
+                                                                <div class="row ml-4">
+                                                                    {% if comments %}
+                                                                        {% for reply in comment.reply_set.all %}
+                                                                            <div class="col-sm-12 mb-5">
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-12">
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-1 pt-2">
+                                                                                                <img id='userpic' height='26px' width="26px" class="imgcircle float-right" src="
+                                                                                                    {% if request.user.is_authenticated %}
+                                                                                                        {% if request.user.userpic %}
+                                                                                                            {{user.userpic.url}}
+                                                                                                        {% else %}
+                                                                                                            {% static 'images/user.svg' %}
+                                                                                                        {% endif %}
+                                                                                                    {% else %}
+                                                                                                        {% static 'images/user.svg' %}
+                                                                                                    {% endif %}">
+                                                                                            </div>
+                                                                                            <div class="col-sm-11 text-left">
+                                                                                                <div class="row">
+                                                                                                    <div class="col-sm-12 text-left">
+                                                                                                        {{reply.user.username|title}}
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-12 text-left">
+                                                                                                        {{reply.created_at}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="col-sm-12 pl-5 mt-2">
+                                                                                        <textarea disabled name="name" cols="40" style="background-color: #eee;overflow-y:visible; width:100%; height: 100%; color:#555; font-size:1.3em; resize:none; border:none;">{{reply.text}}</textarea>
+                                                                                        <div class=""></div>
+                                                                                    </div>
+
+                                                                                    <div class="col-sm-12 mt-2 ml-5">
+                                                                                        <div class="row">
+                                                                                            {% ifequal request.user reply.user %}
+                                                                                                <div class="col-sm-3">
+                                                                                                    <button class="btn btn-danger" id="deletereply_{{reply.id}}" onclick="deletereply({{reply.id}})" type="button" name="button">Delete Reply</button>
+                                                                                                </div>
+                                                                                            {% endifequal %}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        {% endfor %}
+                                                                    {% else %}
+                                                                    {% endif %}
+
+                                                                    <div class="col-sm-12">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-9">
+                                                                                <textarea id="replytext_{{comment.id}}" cols="40" rows="10" style="white-space: pre-wrap;" maxlength="512" placeholder="Write your reply here.(max 512 characters)"></textarea>
+                                                                                <div class=""></div>
+                                                                            </div>
+                                                                            <div class="col-sm-3"></div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <button type="button" id="reply_{{comment.id}}" onclick="postreply('{{comment.id}}');" class="btn btn-primary ml-3" name="button">Post reply</button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-3"></div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <button type="button" id="reply_{{comment.id}}" onclick="postreply('{{comment.id}}');" class="btn btn-primary ml-3" name="button">Post reply</button>
-                                                        </div>
+                                                        </div>     <!-- end of reply -->
                                                     </div>
-                                                  </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="col-sm-12 mb-4">
+                                                    <p>No Comments yet.</p>
+                                                    <p>Be the first one to write a comment.</p>
                                                 </div>
-                                            </div>     <!-- end of reply -->
-                                        </div>
-                                        {% endfor %}
-                                        {% else %}
-                                        <div class="col-sm-12 mb-4">
-                                            <p>No Comments yet.</p>
-                                            <p>Be the first one to write a comment.</p>
-                                        </div>
-                                        {% endif %}
-                                        <div class="col-sm-12">
-                                            <div class="row">
-                                                <div class="col-sm-9">
-                                                    <textarea name="comment" id="comment" placeholder="Write your comment here.(Max 512 characters)" maxlength="512" cols="40" rows="10" style="white-space: pre-wrap;width:100%;"></textarea>
+                                            {% endif %}
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-9">
+                                                        <textarea name="comment" id="comment" placeholder="Write your comment here.(Max 512 characters)" maxlength="512" cols="40" rows="10" style="white-space: pre-wrap;width:100%;"></textarea>
+                                                    </div>
+                                                    <div class="col-sm-3"></div>
                                                 </div>
-                                                <div class="col-sm-3"></div>
-                                            </div>
-                                            <div class="row">
-                                                <button type="button" id="postcomment" onclick="postcomment('{{book.isbn}}');" class="btn btn-primary ml-3" name="button">Post comment</button>
+                                                <div class="row">
+                                                    <button type="button" id="postcomment" onclick="postcomment('{{book.isbn}}');" class="btn btn-primary ml-3" name="button">Post comment</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -613,6 +599,5 @@ body{
             </div>
         </div>
     </div>
-</div>
-<div class="col-sm-12" style='height:80px;'> </div>
+    <div class="col-sm-12" style='height:80px;'></div>
 {% endblock %}
