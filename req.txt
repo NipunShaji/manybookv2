@@ -1,4 +1,4 @@
-Django==2.2.5
+Django==2.2.22
 django-multiselectfield==0.1.8
 django-picklefield==2.0
 Pillow==6.1.0
